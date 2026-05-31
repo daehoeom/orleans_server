@@ -1,0 +1,12 @@
+D:\Repository\OrleansServer\GameServer\GameServer\SharedLibrary\bin\Debug\net9.0\SharedLibrary.deps.json
+D:\Repository\OrleansServer\GameServer\GameServer\SharedLibrary\bin\Debug\net9.0\SharedLibrary.dll
+D:\Repository\OrleansServer\GameServer\GameServer\SharedLibrary\bin\Debug\net9.0\SharedLibrary.pdb
+D:\Repository\OrleansServer\GameServer\GameServer\SharedLibrary\obj\Debug\net9.0\SharedLibrary.GeneratedMSBuildEditorConfig.editorconfig
+D:\Repository\OrleansServer\GameServer\GameServer\SharedLibrary\obj\Debug\net9.0\SharedLibrary.AssemblyInfoInputs.cache
+D:\Repository\OrleansServer\GameServer\GameServer\SharedLibrary\obj\Debug\net9.0\SharedLibrary.AssemblyInfo.cs
+D:\Repository\OrleansServer\GameServer\GameServer\SharedLibrary\obj\Debug\net9.0\SharedLibrary.csproj.CoreCompileInputs.cache
+D:\Repository\OrleansServer\GameServer\GameServer\SharedLibrary\obj\Debug\net9.0\SharedLibrary.sourcelink.json
+D:\Repository\OrleansServer\GameServer\GameServer\SharedLibrary\obj\Debug\net9.0\SharedLibrary.dll
+D:\Repository\OrleansServer\GameServer\GameServer\SharedLibrary\obj\Debug\net9.0\refint\SharedLibrary.dll
+D:\Repository\OrleansServer\GameServer\GameServer\SharedLibrary\obj\Debug\net9.0\SharedLibrary.pdb
+D:\Repository\OrleansServer\GameServer\GameServer\SharedLibrary\obj\Debug\net9.0\ref\SharedLibrary.dll
