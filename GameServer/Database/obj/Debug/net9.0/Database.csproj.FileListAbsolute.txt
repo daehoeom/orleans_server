@@ -1,0 +1,16 @@
+C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\Database\bin\Debug\net9.0\Database.deps.json
+C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\Database\bin\Debug\net9.0\Database.dll
+C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\Database\bin\Debug\net9.0\Database.pdb
+C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\Database\bin\Debug\net9.0\SharedLibrary.dll
+C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\Database\bin\Debug\net9.0\SharedLibrary.pdb
+C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\Database\obj\Debug\net9.0\Database.csproj.AssemblyReference.cache
+C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\Database\obj\Debug\net9.0\Database.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\Database\obj\Debug\net9.0\Database.AssemblyInfoInputs.cache
+C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\Database\obj\Debug\net9.0\Database.AssemblyInfo.cs
+C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\Database\obj\Debug\net9.0\Database.csproj.CoreCompileInputs.cache
+C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\Database\obj\Debug\net9.0\Database.sourcelink.json
+C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\Database\obj\Debug\net9.0\Database.csproj.Up2Date
+C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\Database\obj\Debug\net9.0\Database.dll
+C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\Database\obj\Debug\net9.0\refint\Database.dll
+C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\Database\obj\Debug\net9.0\Database.pdb
+C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\Database\obj\Debug\net9.0\ref\Database.dll
