@@ -10,12 +10,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("ServerLibrary")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("GrainLibrary")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+61db238e171682d4698afaf7e074656919a3acf2")]
-[assembly: System.Reflection.AssemblyProductAttribute("ServerLibrary")]
-[assembly: System.Reflection.AssemblyTitleAttribute("ServerLibrary")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4f5deec9be084fa70f002b6e7a87969b94c64904")]
+[assembly: System.Reflection.AssemblyProductAttribute("GrainLibrary")]
+[assembly: System.Reflection.AssemblyTitleAttribute("GrainLibrary")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // MSBuild WriteCodeFragment 클래스에서 생성되었습니다.

@@ -1,5 +1,10 @@
 var builder = WebApplication.CreateBuilder(args);
 
+builder.UseOrleans(siloBuilder =>
+{
+    siloBuilder.UseLocalhostClustering();
+});
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

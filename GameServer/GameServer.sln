@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontServer", "FrontServer\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Database\Database.csproj", "{59777EF6-D076-4DFF-8865-6495DEDAFD69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerLibrary", "ServerLibrary\ServerLibrary.csproj", "{DE138AA3-6C7A-4373-B76C-9FAE037F83C8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrainLibrary", "GrainLibrary\GrainLibrary.csproj", "{DE138AA3-6C7A-4373-B76C-9FAE037F83C8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedLibrary", "SharedLibrary\SharedLibrary.csproj", "{C28E7A3E-C7C4-4346-AAD0-10F7D7B92FFD}"
 EndProject
