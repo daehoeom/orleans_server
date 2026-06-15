@@ -1,0 +1,73 @@
+## ##########################
+## .NET / C# 표준 제외 대상
+## ##########################
+
+# 빌드 아티팩트 (컴파일 결과물 및 임시 파일)
+[Bin]
+[Obj]
+/[Bb]in/
+/[Oo]bj/
+/[Xx]64/
+/[Xx]86/
+/[Aa]rm/
+/[Aa]rm64/
+/Build/
+/_ReSharper*/
+
+# 디버그 기호 및 성능 프로파일링 파일
+*.pdb
+*.mdmp
+*.hdmp
+*.log
+
+## ##########################
+## IDE / 개발 툴 관련 제외 대상
+## ##########################
+
+# Visual Studio 관련
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider (JetBrains) 관련
+.idea/
+*.sln.iml
+
+# VS Code 관련
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+## ##########################
+## 패키지 매니저 (NuGet)
+## ##########################
+
+# NuGet 패키지 저장소 및 캐시
+*.nupkg
+**/packages/
+!**/packages/repositories.config
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## ##########################
+## OS / 시스템 파일
+## ##########################
+
+.DS_Store
+Thumbs.db
+
+## ##########################
+## 로컬 설정 및 보안 (⚠️ 중요)
+## ##########################
+
+# 로컬 개발용 환경 변수 및 비밀 설정 파일
+*.user
+appsettings.Development.json
+appsettings.Local.json
+.env
+.env.*
