@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "lcWC1ihFS2s=",
+  "dgSpecHash": "K6b7StQEhtE=",
   "success": true,
-  "projectFilePath": "D:\\Repository\\OrleansServer\\GameServer\\GameServer\\SharedLibrary\\SharedLibrary.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\SharedLibrary\\SharedLibrary.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\planus1992\\.nuget\\packages\\messagepack\\3.1.7\\messagepack.3.1.7.nupkg.sha512",
+    "C:\\Users\\planus1992\\.nuget\\packages\\messagepack.annotations\\3.1.7\\messagepack.annotations.3.1.7.nupkg.sha512",
+    "C:\\Users\\planus1992\\.nuget\\packages\\messagepackanalyzer\\3.1.7\\messagepackanalyzer.3.1.7.nupkg.sha512",
+    "C:\\Users\\planus1992\\.nuget\\packages\\microsoft.net.stringtools\\17.11.4\\microsoft.net.stringtools.17.11.4.nupkg.sha512"
+  ],
   "logs": []
 }

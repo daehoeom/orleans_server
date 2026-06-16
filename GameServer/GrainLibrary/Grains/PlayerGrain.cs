@@ -11,6 +11,4 @@ public class PlayerGrain : Grain, IPlayerGrain
     {
         return Task.FromResult(this.GetPrimaryKeyString());
     }
-    
-    
 }
