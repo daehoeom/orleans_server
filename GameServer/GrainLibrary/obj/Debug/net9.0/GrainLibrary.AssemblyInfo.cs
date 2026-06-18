@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GrainLibrary")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a5fccdc74cd47981af83d0484879b14fbf043d7a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fe9a6a07977c917ab17adffaa9410b8acf075dd3")]
 [assembly: System.Reflection.AssemblyProductAttribute("GrainLibrary")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GrainLibrary")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
