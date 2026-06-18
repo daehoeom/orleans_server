@@ -2,16 +2,30 @@
 using System.Text;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
-using ServerLibrary.Manager;
+using ServerLibrary.Services;
+using SharedLibrary.Packet.Base;
 
 namespace ServerLibrary.Server;
 
-public class TcpServerHandler : SimpleChannelInboundHandler<IByteBuffer>
+public class GameServerHandler : SimpleChannelInboundHandler<StreamPacket>
 {
-    protected override void ChannelRead0(IChannelHandlerContext context, IByteBuffer message)
+    private readonly PacketHandler _packetHandler;
+
+    public GameServerHandler(PacketHandler packetHandler)
     {
-        var received = message.ToString(Encoding.UTF8);
-        Console.WriteLine($"[Server] Receive data : {received}");
+        _packetHandler = packetHandler;
+    }
+    
+    protected override void ChannelRead0(IChannelHandlerContext context, StreamPacket message)
+    {
+        _ = _packetHandler.DispatchAsync(context, message)
+            .ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+
+                }
+            }, TaskContinuationOptions.OnlyOnFaulted);
     }
     
     public override void ChannelActive(IChannelHandlerContext context)
@@ -22,8 +36,6 @@ public class TcpServerHandler : SimpleChannelInboundHandler<IByteBuffer>
     public override void ChannelInactive(IChannelHandlerContext context)
     {
         Console.WriteLine($"[Server] Disconnect Client: {context.Channel.RemoteAddress}");
-        
-        
     }
 
     public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)

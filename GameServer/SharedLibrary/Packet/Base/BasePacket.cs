@@ -1,6 +1,6 @@
 ﻿using MessagePack;
 
-namespace SharedLibrary.Packet
+namespace SharedLibrary.Packet.Base
 {
     [MessagePackObject]
     public class BaseRequestPacket : IRequestPacket

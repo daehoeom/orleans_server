@@ -4,6 +4,87 @@
     "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\FrontServer\\FrontServer.csproj": {}
   },
   "projects": {
+    "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\Database\\Database.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\Database\\Database.csproj",
+        "projectName": "Database",
+        "projectPath": "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\Database\\Database.csproj",
+        "packagesPath": "C:\\Users\\planus1992\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\Database\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\planus1992\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\SharedLibrary\\SharedLibrary.csproj": {
+                "projectPath": "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\SharedLibrary\\SharedLibrary.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.1.79, )"
+            },
+            "Dapper.Contrib": {
+              "target": "Package",
+              "version": "[2.0.78, )"
+            },
+            "MySqlConnector": {
+              "target": "Package",
+              "version": "[2.6.0-beta.2, )"
+            },
+            "StackExchange.Redis": {
+              "target": "Package",
+              "version": "[2.13.17, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
     "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\FrontServer\\FrontServer.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -26,6 +107,12 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
+              "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\Database\\Database.csproj": {
+                "projectPath": "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\Database\\Database.csproj"
+              },
+              "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\GrainLibrary\\GrainLibrary.csproj": {
+                "projectPath": "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\GrainLibrary\\GrainLibrary.csproj"
+              },
               "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\SharedLibrary\\SharedLibrary.csproj": {
                 "projectPath": "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\SharedLibrary\\SharedLibrary.csproj"
               }
@@ -76,6 +163,95 @@
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
             },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\GrainLibrary\\GrainLibrary.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\GrainLibrary\\GrainLibrary.csproj",
+        "projectName": "GrainLibrary",
+        "projectPath": "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\GrainLibrary\\GrainLibrary.csproj",
+        "packagesPath": "C:\\Users\\planus1992\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\GrainLibrary\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\planus1992\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\Database\\Database.csproj": {
+                "projectPath": "C:\\Users\\planus1992\\Desktop\\Workspace\\Server\\GameServer\\GameServer\\Database\\Database.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "DotNetty.Codecs": {
+              "target": "Package",
+              "version": "[0.7.6, )"
+            },
+            "DotNetty.Handlers": {
+              "target": "Package",
+              "version": "[0.7.6, )"
+            },
+            "DotNetty.Transport": {
+              "target": "Package",
+              "version": "[0.7.6, )"
+            },
+            "Microsoft.Orleans.Sdk": {
+              "target": "Package",
+              "version": "[10.1.0, )"
+            },
+            "Microsoft.Orleans.Server": {
+              "target": "Package",
+              "version": "[10.1.0, )"
+            },
+            "Nito.AsyncEx": {
+              "target": "Package",
+              "version": "[5.1.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }

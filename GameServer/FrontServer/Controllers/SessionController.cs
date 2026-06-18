@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SharedLibrary.Packet.Http.Request;
+using SharedLibrary.Packet.Http;
 
 namespace GameServer.Controllers;
 

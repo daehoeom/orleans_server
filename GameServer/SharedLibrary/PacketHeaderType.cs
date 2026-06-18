@@ -6,4 +6,8 @@ public enum PacketHeaderType
     
     // player
     LoadPlayer = 1000,
+    
+    // Shop
+    LoadShop = 2000,
+    
 }

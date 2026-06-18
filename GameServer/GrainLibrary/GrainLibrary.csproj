@@ -20,4 +20,8 @@
       <ProjectReference Include="..\Database\Database.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Manager\" />
+    </ItemGroup>
+
 </Project>

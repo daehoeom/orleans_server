@@ -1,14 +1,14 @@
 ﻿namespace ServerLibrary.Grains;
 
-public interface IPlayerGrain : IGrainWithStringKey
+public interface IPlayerGrain : IGrainWithIntegerKey
 {
-    Task<string> GetPrimaryKey();
+    Task<long> GetPrimaryKey();
 }
 
 public class PlayerGrain : Grain, IPlayerGrain 
 {
-    public Task<string> GetPrimaryKey()
+    public Task<long> GetPrimaryKey()
     {
-        return Task.FromResult(this.GetPrimaryKeyString());
+        return Task.FromResult(this.GetPrimaryKeyLong());
     }
 }

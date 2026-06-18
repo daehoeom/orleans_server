@@ -1,45 +1,34 @@
+using ServerLibrary.Server;
+using ServerLibrary.Services;
+
 namespace GameServer;
 
 public class Program
 {
     public static async Task Main(string[] args)
     {
-        
+        await Host.CreateDefaultBuilder(args)
+            .UseOrleans(siloBuilder =>
+            {
+                siloBuilder.UseLocalhostClustering();
+            })
+            .ConfigureServices(services =>
+            {
+                // 세션
+                services.AddSingleton<SessionService>();
+ 
+                // 패킷 컨트롤러 (역할별로 추가)
+                services.AddSingleton<PlayerBaseController, PlayerController.PlayerController>();
+                // services.AddSingleton<PacketController, ChatController>();
+                // services.AddSingleton<PacketController, InventoryController>();
+ 
+                // 패킷 디스패처 & DotNetty 핸들러
+                services.AddSingleton<PacketHandler>();
+                services.AddSingleton<GameServerHandler>();
+ 
+                // DotNetty 서버
+                services.AddHostedService<ServerRunner>();
+            })
+            .RunConsoleAsync();
     }
 }
-
-
-// var builder = WebApplication.CreateBuilder(args);
-//
-// // builder.UseOrleans(siloBuilder =>
-// // {
-// //     siloBuilder.UseLocalhostClustering();
-// // });
-//
-// // Add services to the container.
-// builder.Services.AddControllersWithViews();
-//
-// var app = builder.Build();
-//
-// // Configure the HTTP request pipeline.
-// if (!app.Environment.IsDevelopment())
-// {
-//     app.UseExceptionHandler("/Home/Error");
-//     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-//     app.UseHsts();
-// }
-//
-// app.UseHttpsRedirection();
-// app.UseRouting();
-//
-// app.UseAuthorization();
-//
-// app.MapStaticAssets();
-//
-// app.MapControllerRoute(
-//         name: "default",
-//         pattern: "{controller=Home}/{action=Index}/{id?}")
-//     .WithStaticAssets();
-//
-//
-// app.Run();

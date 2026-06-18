@@ -1,4 +1,4 @@
-﻿namespace SharedLibrary.Packet
+﻿namespace SharedLibrary.Packet.Base
 {
     public interface IRequestPacket
     {

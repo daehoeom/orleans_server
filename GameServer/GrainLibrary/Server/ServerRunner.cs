@@ -1,10 +1,12 @@
 ﻿using Database.Db;
 using Database.Redis;
+using DotNetty.Codecs;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ServerLibrary.Services;
 
 namespace ServerLibrary.Server;
 
@@ -13,16 +15,19 @@ public class ServerRunner : BackgroundService
     private readonly ILogger<ServerRunner> _logger;
     private readonly DatabaseService _databaseService;
     private readonly RedisService _redisService;
+    private readonly GameServerHandler _gameServerHandler;
 
     private IEventLoopGroup _bossGroup;
     private IEventLoopGroup _workerGroup;
     private IChannel _boundChannel;
     
-    public ServerRunner(ILogger<ServerRunner> logger, DatabaseService databaseService, RedisService redisService)
+    public ServerRunner(ILogger<ServerRunner> logger, DatabaseService databaseService, 
+        RedisService redisService, GameServerHandler handler)
     {
         _logger = logger;
         _databaseService = databaseService;
         _redisService = redisService;
+        _gameServerHandler = handler;
     }
 
     private async Task<bool> BindServerAsync(string host, int port)
@@ -40,7 +45,19 @@ public class ServerRunner : BackgroundService
                 .ChildHandler(new ActionChannelInitializer<IChannel>(channel =>
                 {
                     var pipeline = channel.Pipeline;
-                    pipeline.AddLast("echoHandler", new TcpServerHandler());
+
+                    pipeline.AddLast(new LengthFieldBasedFrameDecoder(
+                        maxFrameLength: 1 << 20,
+                        lengthFieldOffset: 0,
+                        lengthFieldLength: 4,
+                        lengthAdjustment: 0,
+                        initialBytesToStrip: 4));
+
+                    pipeline.AddLast(new PacketDecoder());
+
+                    pipeline.AddLast(new PacketEncoder());
+
+                    pipeline.AddLast(_gameServerHandler);
                 }));
 
             _boundChannel = await bootStrap.BindAsync(port);
