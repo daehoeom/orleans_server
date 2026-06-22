@@ -1,3 +1,6 @@
+using Database.Db;
+using Database.Redis;
+using GameServer.Controllers;
 using ServerLibrary.Server;
 using ServerLibrary.Services;
 
@@ -15,10 +18,12 @@ public class Program
             .ConfigureServices(services =>
             {
                 // 세션
+                services.AddSingleton<DatabaseService>();
+                services.AddSingleton<RedisService>();
                 services.AddSingleton<SessionService>();
  
                 // 패킷 컨트롤러 (역할별로 추가)
-                services.AddSingleton<PlayerBaseController, PlayerController.PlayerController>();
+                services.AddSingleton<PlayerBaseController, PlayerController>();
                 // services.AddSingleton<PacketController, ChatController>();
                 // services.AddSingleton<PacketController, InventoryController>();
  

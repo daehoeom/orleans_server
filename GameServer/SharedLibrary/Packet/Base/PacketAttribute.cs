@@ -1,11 +1,11 @@
 ﻿namespace SharedLibrary.Packet.Base
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public class PacketPacketHandlerAttribute : Attribute
+    public class PacketHandlerAttribute : Attribute
     {
         public PacketHeaderType HeaderType { get; }
 
-        public PacketPacketHandlerAttribute(PacketHeaderType headerType) => HeaderType = headerType;
+        public PacketHandlerAttribute(PacketHeaderType headerType) => HeaderType = headerType;
     }
 
     [AttributeUsage(AttributeTargets.Class)]

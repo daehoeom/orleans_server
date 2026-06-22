@@ -29,7 +29,7 @@ public class PacketHandler
         foreach (var method in target.GetType()
                      .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
         {
-            var attr = method.GetCustomAttribute<PacketPacketHandlerAttribute>();
+            var attr = method.GetCustomAttribute<PacketHandlerAttribute>();
             if (attr is null)
             {
                 continue;

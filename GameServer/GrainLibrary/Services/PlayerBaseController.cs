@@ -1,19 +1,10 @@
-﻿using System.Reflection;
-using DotNetty.Transport.Channels;
-using MessagePack;
+﻿using MessagePack;
 using ServerLibrary.Models;
 using SharedLibrary;
+using SharedLibrary.Packet;
 using SharedLibrary.Packet.Base;
 
 namespace ServerLibrary.Services;
-
-public static class HeaderCache<T>
-    where T : class
-{
-    public static readonly PacketHeaderType HeaderType =
-        typeof(T).GetCustomAttribute<ResponseAttribute>()?.HeaderType
-        ?? throw new InvalidOperationException($"[ResponseHeader] 어트리뷰트가 없습니다: {typeof(T).Name}");
-}
 
 public abstract class PlayerBaseController(IClusterClient clusterClient)
 {
