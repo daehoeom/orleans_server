@@ -10,22 +10,16 @@ public class CommunityController(IClusterClient clusterClient, SessionService se
     : PlayerBaseController(clusterClient)
 {
     [PacketHandler(PacketHeaderType.SendChat)]
-    public async Task SendChatAsync(PlayerSession player, SendChatReq request)
+    public Task SendChatAsync(PlayerSession player, SendChatReq request)
     {
-        var allSession = sessionService.GetAllSession();
-        
         // 대화내용 필터 추가
 
         var ntf = new ChatNtf()
         {
             Message = request.Message,
         };
-        allSession.ForEach(p =>
-        {
-            
-        });
-        
+        sessionService.Broadcast(ntf);
+
+        return SendAsync(player, new SendChatRes());
     }
-    
-    
 }

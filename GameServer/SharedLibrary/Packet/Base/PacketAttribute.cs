@@ -16,5 +16,14 @@
         public ResponseAttribute(PacketHeaderType headerType)
             => HeaderType = headerType;
     }
+    
+    [AttributeUsage(AttributeTargets.Class)]
+    public sealed class NotifyAttribute : Attribute
+    {
+        public PacketHeaderType HeaderType { get; }
+
+        public NotifyAttribute(PacketHeaderType headerType)
+            => HeaderType = headerType;
+    }
 }
 

@@ -33,7 +33,7 @@ public class BotClientSession
     public void OnNotify<T>(Func<T, Task> handler)
         where T : class, new()
     {
-        var headerType = HeaderCache<T>.HeaderType;
+        var headerType = NotifyHeaderCache<T>.HeaderType;
         _notifyHandlers[headerType] = async stream =>
         {
             var packet = MessagePackSerializer.Deserialize<BaseNtfPacket<T>>(stream.Body.ToArray());
@@ -57,7 +57,7 @@ public class BotClientSession
     public async Task<BaseResponsePacket<TResponse>> WaitForResponseAsync<TResponse>(
         TimeSpan? timeout = null) where TResponse : class, new()
     {
-        var headerType = HeaderCache<TResponse>.HeaderType;
+        var headerType = ResponseHeaderCache<TResponse>.HeaderType;
         var tcs = new TaskCompletionSource<StreamPacket>(TaskCreationOptions.RunContinuationsAsynchronously);
 
         _pending[headerType] = tcs;

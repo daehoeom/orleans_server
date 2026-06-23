@@ -45,12 +45,12 @@ public class SessionService(ILogger<SessionService> logger)
         return true;
     }
 
-    public void Broadcast<T>(T packet)
-        where T : class
+    public void Broadcast<T>(T body)
+        where T : class, new()
     {
         foreach (var session in _sessions.Values)
         {
-            session.
+            session.NotifyAsync(body);
         }
     }
 }

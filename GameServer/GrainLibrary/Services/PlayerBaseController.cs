@@ -16,12 +16,13 @@ public abstract class PlayerBaseController(IClusterClient clusterClient)
     {
         var packet = new BaseResponsePacket<T>
         {
-            HeaderType = HeaderCache<T>.HeaderType,
+            HeaderType = ResponseHeaderCache<T>.HeaderType,
             ResultCode = resultCode,
             Stream     = stream,
         };
- 
-        return WriteAsync(session, packet);
+
+        session.Channel.WriteAndFlushAsync(packet);
+        return Task.CompletedTask;
     }
 
     protected static Task NotifyAsync<T>(PlayerSession session, T ntf)
@@ -29,16 +30,11 @@ public abstract class PlayerBaseController(IClusterClient clusterClient)
     {
         var packet = new BaseNtfPacket<T>
         {
-            HeaderType = HeaderCache<T>.HeaderType,
+            HeaderType = NotifyHeaderCache<T>.HeaderType,
             Stream = ntf,
         };
- 
-        return WriteAsync(session, packet);
-    }
-    
-    private static async Task WriteAsync<T>(PlayerSession session, T packet)
-    {
-        var bytes = MessagePackSerializer.Serialize(packet);
-        await session.Channel.WriteAndFlushAsync(packet);
+
+        session.Channel.WriteAndFlushAsync(packet);
+        return Task.CompletedTask;
     }
 }
