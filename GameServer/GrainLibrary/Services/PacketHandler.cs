@@ -77,7 +77,7 @@ public class PacketHandler
         }
 
         var request = MessagePackSerializer.Deserialize(router.Type, stream.Body);
-        var result = router.MethodInfo.Invoke(router.Target, [context, request]);
+        var result = router.MethodInfo.Invoke(router.Target, [session, request]);
         if (result is Task task)
         {
             await task;

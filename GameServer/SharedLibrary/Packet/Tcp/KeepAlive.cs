@@ -1,4 +1,5 @@
 ﻿using MessagePack;
+using SharedLibrary.Packet.Base;
 
 namespace SharedLibrary.Packet.Tcp
 {
@@ -8,6 +9,7 @@ namespace SharedLibrary.Packet.Tcp
     }
 
     [MessagePackObject]
+    [Response(PacketHeaderType.KeepAlive)]
     public class KeepAliveRes
     {
         [Key(0)]

@@ -10,25 +10,16 @@ using ServerLibrary.Services;
 
 namespace ServerLibrary.Server;
 
-public class ServerRunner : BackgroundService
+public class ServerRunner(
+    ILogger<ServerRunner> logger,
+    DatabaseService databaseService,
+    RedisService redisService,
+    GameServerHandler handler)
+    : BackgroundService
 {
-    private readonly ILogger<ServerRunner> _logger;
-    private readonly DatabaseService _databaseService;
-    private readonly RedisService _redisService;
-    private readonly GameServerHandler _gameServerHandler;
-
-    private IEventLoopGroup _bossGroup;
-    private IEventLoopGroup _workerGroup;
-    private IChannel _boundChannel;
-    
-    public ServerRunner(ILogger<ServerRunner> logger, DatabaseService databaseService, 
-        RedisService redisService, GameServerHandler handler)
-    {
-        _logger = logger;
-        _databaseService = databaseService;
-        _redisService = redisService;
-        _gameServerHandler = handler;
-    }
+    private IEventLoopGroup _bossGroup = null!;
+    private IEventLoopGroup _workerGroup = null!;
+    private IChannel _boundChannel = null!;
 
     private async Task<bool> BindServerAsync(string host, int port)
     {
@@ -57,15 +48,15 @@ public class ServerRunner : BackgroundService
 
                     pipeline.AddLast(new PacketEncoder());
 
-                    pipeline.AddLast(_gameServerHandler);
+                    pipeline.AddLast(handler);
                 }));
 
             _boundChannel = await bootStrap.BindAsync(port);
-            _logger.LogInformation($"[Server] Server running on port {host}:{port}");
+            logger.LogInformation($"[Server] Server running on port {host}:{port}");
         }
         catch (Exception e)
         {
-            _logger.LogError($"[Server] Exception: {e.Message}");
+            logger.LogError($"[Server] Exception: {e.Message}");
             throw;
         }
 
@@ -74,7 +65,7 @@ public class ServerRunner : BackgroundService
 
     private async Task CloseAsync()
     {
-        _logger.LogInformation("[Server] Stopping Netty Server...");
+        logger.LogInformation("[Server] Stopping Netty Server...");
 
         await _boundChannel.CloseAsync();
         
@@ -83,7 +74,7 @@ public class ServerRunner : BackgroundService
             _workerGroup.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1))
         );
 
-        _logger.LogInformation("[Server] Shutdown server process gracefully.");
+        logger.LogInformation("[Server] Shutdown server process gracefully.");
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -94,10 +85,10 @@ public class ServerRunner : BackgroundService
         }
         catch (Exception ex)
         {
-            _logger.LogError($"[Server] Error during waiting for channel completion: {ex.Message}");
+            logger.LogError($"[Server] Error during waiting for channel completion: {ex.Message}");
         }
         
-        _logger.LogInformation("[Server] Server channel closed. Stepping out from ExecuteAsync.");
+        logger.LogInformation("[Server] Server channel closed. Stepping out from ExecuteAsync.");
     }
 
     public override async Task StartAsync(CancellationToken _)

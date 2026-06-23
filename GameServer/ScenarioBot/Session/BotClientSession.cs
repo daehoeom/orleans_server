@@ -4,18 +4,43 @@ using MessagePack;
 using SharedLibrary;
 using SharedLibrary.Packet;
 using SharedLibrary.Packet.Base;
+using SharedLibrary.Packet.Tcp;
 
 namespace ScenarioBot.Session;
 
-public class BotClientSession(long botId)
+public class BotClientSession
 {
-    public long BotId { get; } = botId;
+    public long BotId { get; }
     public IChannel Channel { get; private set; } = null!;
 
     private readonly ConcurrentDictionary<PacketHeaderType, TaskCompletionSource<StreamPacket>> _pending = new();
+    private readonly ConcurrentDictionary<PacketHeaderType, Func<StreamPacket, Task>> _notifyHandlers = new();
 
-    internal void Attack(IChannel channel) => Channel = channel;
+    internal void Attach(IChannel channel) => Channel = channel;
 
+    public BotClientSession(long botId)
+    {
+        BotId = botId;
+        
+        RegisterNtf();
+    }
+
+    private void RegisterNtf()
+    {
+        OnNotify<ChatNtf>(ntf => Task.CompletedTask);
+    }
+    
+    public void OnNotify<T>(Func<T, Task> handler)
+        where T : class, new()
+    {
+        var headerType = HeaderCache<T>.HeaderType;
+        _notifyHandlers[headerType] = async stream =>
+        {
+            var packet = MessagePackSerializer.Deserialize<BaseNtfPacket<T>>(stream.Body.ToArray());
+            await handler(packet.Stream);
+        };
+    }
+    
     public async Task SendAsync<TRequest>(PacketHeaderType headerType, TRequest request)
     {
         var body = MessagePackSerializer.Serialize(request);
@@ -53,6 +78,12 @@ public class BotClientSession(long botId)
         if (_pending.TryGetValue(stream.HeaderType, out var tcs))
         {
             tcs.TrySetResult(stream);
+            return;
+        }
+
+        if (_notifyHandlers.TryGetValue(stream.HeaderType, out var handler))
+        {
+            _ = handler(stream);
         }
     }
 

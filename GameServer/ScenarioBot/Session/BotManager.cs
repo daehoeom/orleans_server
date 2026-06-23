@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Net;
 using DotNetty.Codecs;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
@@ -76,7 +77,7 @@ public class BotManager(string host, int port, IScenario scenario, int botCount)
                 pipeline.AddLast(new BotClientHandler(session));
             }));
  
-        return bootstrap.ConnectAsync(host, port);
+        return bootstrap.ConnectAsync(IPAddress.Parse(host), port);
     }
 
     

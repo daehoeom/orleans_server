@@ -39,8 +39,6 @@ public abstract class PlayerBaseController(IClusterClient clusterClient)
     private static async Task WriteAsync<T>(PlayerSession session, T packet)
     {
         var bytes = MessagePackSerializer.Serialize(packet);
-        var buffer   = session.Channel.Allocator.Buffer(bytes.Length);
-        buffer.WriteBytes(bytes);
-        await session.Channel.WriteAndFlushAsync(buffer);
+        await session.Channel.WriteAndFlushAsync(packet);
     }
 }

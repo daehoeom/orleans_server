@@ -24,8 +24,8 @@ public class Program
  
                 // 패킷 컨트롤러 (역할별로 추가)
                 services.AddSingleton<PlayerBaseController, PlayerController>();
-                // services.AddSingleton<PacketController, ChatController>();
-                // services.AddSingleton<PacketController, InventoryController>();
+                services.AddSingleton<PlayerBaseController, ShopController>();
+                services.AddSingleton<PlayerBaseController, CommunityController>();
  
                 // 패킷 디스패처 & DotNetty 핸들러
                 services.AddSingleton<PacketHandler>();

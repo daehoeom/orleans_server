@@ -1,4 +1,5 @@
 ﻿using MessagePack;
+using SharedLibrary.Packet.Base;
 
 namespace SharedLibrary.Packet.Tcp
 {
@@ -8,8 +9,11 @@ namespace SharedLibrary.Packet.Tcp
     }
 
     [MessagePackObject]
+    [Response(PacketHeaderType.LoadPlayer)]
     public class LoadPlayerRes
     {
+        [Key(0)]
+        public long PlayerId { get; set; }
     }
 }
 

@@ -12,19 +12,22 @@ public class PlayerController(IClusterClient clusterClient)
     : PlayerBaseController(clusterClient)
 {
     [PacketHandler(PacketHeaderType.LoadPlayer)]
-    public async Task LoadPlayerAsync(PlayerSession session, LoadPlayerReq req)
+    public async Task LoadPlayerAsync(PlayerSession player, LoadPlayerReq req)
     {
-        var grain = _clusterClient.GetGrain<IPlayerGrain>(session.SessionId);
+        var playerGrain = _clusterClient.GetGrain<IPlayerGrain>(player.SessionId);
 
+        var data = await playerGrain.GetPlayerData();
         
-        
-        await SendAsync(session, new LoadPlayerRes());
+        await SendAsync(player, new LoadPlayerRes
+        {
+            PlayerId = data.PlayerId,
+        });
     }
 
     [PacketHandler(PacketHeaderType.KeepAlive)]
-    public Task KeepAliveAsync(PlayerSession session, KeepAliveReq _)
+    public Task KeepAliveAsync(PlayerSession player, KeepAliveReq _)
     {
-        return SendAsync(session, new KeepAliveRes()
+        return SendAsync(player, new KeepAliveRes
         {
             DateTimeTicks = TimeUtil.UtcNow.Ticks,
         });

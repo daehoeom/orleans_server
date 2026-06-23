@@ -11,15 +11,26 @@ public class LoadPlayerScenario : IScenario
     public async Task RunAsync(BotClientSession session)
     {
         //1. 요청 송신
-        await session.SendAsync(PacketHeaderType.LoadPlayer, new LoadPlayerReq()
+        await session.SendAsync(PacketHeaderType.KeepAlive, new KeepAliveReq
         {
 
         });
 
-        var response = await session.WaitForResponseAsync<LoadPlayerRes>();
-        if (response.ResultCode != ResultCode.Success)
+        var keepAliveRes = await session.WaitForResponseAsync<KeepAliveRes>();
+        if (keepAliveRes.ResultCode != ResultCode.Success)
         {
-            throw new Exception($"[{Name}] 실패: {response.ResultCode}");
+            throw new Exception($"[{Name}] 실패: {keepAliveRes.ResultCode}");
+        }
+        
+        // 2. 정보 로드
+        await session.SendAsync(PacketHeaderType.LoadPlayer, new LoadPlayerReq
+        {
+        });
+
+        var loadRes = await session.WaitForResponseAsync<LoadPlayerRes>();
+        if (loadRes.ResultCode != ResultCode.Success)
+        {
+            throw new Exception($"[{Name}] 실패: {loadRes.ResultCode}");
         }
     }
 }

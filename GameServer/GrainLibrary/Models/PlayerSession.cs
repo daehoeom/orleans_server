@@ -2,25 +2,35 @@
 
 namespace ServerLibrary.Models;
 
-public class PlayerSession
+public class PlayerSession : IDisposable
 {
     private long _sessionId;
-    private IChannelHandlerContext _handlerContext;
 
-
-    public IChannelHandlerContext Channel => _handlerContext;
+    private readonly CancellationTokenSource _authTimeoutCts = new();
+    
+    public IChannelHandlerContext Channel { get; init; }
     public long SessionId => _sessionId;
 
-    public PlayerSession CreateSession(IChannelHandlerContext context, long sessionId)
+    public PlayerSession CreateSession(long sessionId)
     {
-        var instance = new PlayerSession
-        {
-            _handlerContext = context,
-            _sessionId = sessionId,
-        };
-
-        return instance;
+        _sessionId = sessionId;
+        return this;
     }
-    
-    
+
+    public void StartAuthTimeout(TimeSpan timeout)
+    {
+        _ = Task.Delay(timeout, _authTimeoutCts.Token)
+            .ContinueWith(t =>
+            {
+                if (t.IsCanceled)
+                {
+                    return;
+                }
+
+                Channel.CloseAsync();
+            });
+    }
+
+
+    public void Dispose() => _authTimeoutCts.Dispose();
 }

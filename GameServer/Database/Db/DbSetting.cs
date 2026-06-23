@@ -2,17 +2,17 @@
 
 public record DbSetting
 {
-    public string AccountDbHost { get; init; } = string.Empty;
+    public string AccountDbHost { get; init; } = "127.0.0.1";
     public int AccountDbPort { get; init; } = 3306;
-    public string AccountDbDatabase { get; init; } = string.Empty;
+    public string AccountDbDatabase { get; init; } = "account";
     public string AccountDbUser { get; init; } = string.Empty;
     public string AccountDbPassWord { get; init; } = string.Empty;
     public int AccountDbMinPool { get; init; } = 30;
     public int AccountDbMaxPool { get; init; } = 60;
     
-    public string GameDbHost { get; init; } = string.Empty;
+    public string GameDbHost { get; init; } = "127.0.0.1";
     public int GameDbPort { get; init; } = 3306;
-    public string GameDbDatabase { get; init; } = string.Empty;
+    public string GameDbDatabase { get; init; } = "game";
     public string GameDbUser { get; init; } = string.Empty;
     public string GameDbPassWord { get; init; } = string.Empty;
     public int GameDbMinPool { get; init; } = 30;

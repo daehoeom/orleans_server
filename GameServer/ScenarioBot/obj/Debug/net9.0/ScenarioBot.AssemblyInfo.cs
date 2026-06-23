@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ScenarioBot")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fec0c64bfec899e07cbfa2206a8023f6768c3945")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8ec85070be69925e488877fb61a85195be5148d4")]
 [assembly: System.Reflection.AssemblyProductAttribute("ScenarioBot")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ScenarioBot")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
