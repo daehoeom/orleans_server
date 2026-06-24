@@ -1,4 +1,4 @@
-﻿namespace ServerLibrary.Resource;
+namespace GrainLibrary.Resource;
 
 public static class ResourceLoader
 {

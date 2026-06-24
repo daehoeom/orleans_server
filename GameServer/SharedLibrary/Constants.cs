@@ -7,3 +7,10 @@ public enum CurrencyType
     FreeClover = 2,
     Gold = 3,
 }
+
+public enum ChatType
+{
+    None = 0,
+    Channel = 1,
+    Whisper = 2,
+}

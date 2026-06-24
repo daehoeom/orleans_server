@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace ServerLibrary.Services;
+namespace GrainLibrary.Services;
 
 public record Router
 {

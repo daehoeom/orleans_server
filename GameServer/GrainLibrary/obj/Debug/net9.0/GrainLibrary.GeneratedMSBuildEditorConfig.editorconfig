@@ -1,5 +1,5 @@
 is_global = true
-build_property.Orleans_DesignTimeBuild = 
+build_property.Orleans_DesignTimeBuild = True
 build_property.Orleans_AttachDebugger = 
 build_property.Orleans_GenerateFieldIds = 
 build_property.Orleans_ConstructorAttributes = 
@@ -20,7 +20,7 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
-build_property.RootNamespace = ServerLibrary
+build_property.RootNamespace = GrainLibrary
 build_property.ProjectDir = C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\GrainLibrary\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

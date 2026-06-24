@@ -1,4 +1,4 @@
-﻿namespace ServerLibrary.Utility;
+﻿namespace GrainLibrary.Utility;
 
 public static class TimeUtil
 {

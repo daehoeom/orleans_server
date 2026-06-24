@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using SharedLibrary;
 using SharedLibrary.Packet.Base;
 
-namespace ServerLibrary.Services;
+namespace GrainLibrary.Services;
 
 public class PacketHandler
 {
@@ -56,7 +56,7 @@ public class PacketHandler
                 MethodInfo = method,
             };
             
-            Console.WriteLine($"[PacketHandler] 등록: {attr.HeaderType} → {method.Name} ({requestType.Name})");
+            _logger.LogInformation($"[PacketHandler] 등록: {attr.HeaderType} → {method.Name} ({requestType.Name})");
         }
     }
 
@@ -65,14 +65,14 @@ public class PacketHandler
         var session = _sessionService.GetSession(context);
         if (session is null)
         {
-            Console.WriteLine($"[PacketHandler] 세션 없음: {context.Channel.RemoteAddress}");
+            _logger.LogError($"[PacketHandler] 세션 없음: {context.Channel.RemoteAddress}");
             await context.CloseAsync();
             return;
         }
         
         if (!_handlers.TryGetValue(stream.HeaderType, out var router))
         {
-            Console.WriteLine($"[PacketHandler] 미등록 HeaderType: {stream.HeaderType}");
+            _logger.LogError($"[PacketHandler] 미등록 HeaderType: {stream.HeaderType}");
             return;
         }
 

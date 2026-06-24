@@ -8,7 +8,7 @@ namespace ApiServer.Controllers;
 public class SessionController(ILogger<SessionController> logger) : ControllerBase
 {
     [HttpPost("login")]
-    public async Task<IActionResult> LoginAsync([FromBody] LoginReq req)
+    public async Task<IActionResult> LoginAsync([FromBody] Login req)
     {
         return Ok(new LoginRes());
     }

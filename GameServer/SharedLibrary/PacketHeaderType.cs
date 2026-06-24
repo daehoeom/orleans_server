@@ -4,10 +4,10 @@ public enum PacketHeaderType
 {
     None = 0,
     KeepAlive = 1,
+    Auth = 2,
     
     // player
     LoadPlayer = 1000,
-    
     
     // Shop
     LoadShop = 2000,
@@ -15,5 +15,5 @@ public enum PacketHeaderType
     // Community
     SendChat = 3000,
     ChatNtf = 3001,
-    
+    Send
 }

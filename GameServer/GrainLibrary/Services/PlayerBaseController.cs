@@ -1,28 +1,27 @@
 ﻿using MessagePack;
-using ServerLibrary.Models;
+using GrainLibrary.Models;
 using SharedLibrary;
 using SharedLibrary.Packet;
 using SharedLibrary.Packet.Base;
 
-namespace ServerLibrary.Services;
+namespace GrainLibrary.Services;
 
 public abstract class PlayerBaseController(IClusterClient clusterClient)
 {
     protected IClusterClient _clusterClient { get; } = clusterClient;
 
-    protected static Task SendAsync<T>(PlayerSession session, T stream,  
-        ResultCode resultCode = ResultCode.Success)
+    protected static Task SendAsync<T>(PlayerSession session, 
+        ResultCode resultCode = ResultCode.Success, T? response = null)
         where T : class, new()
     {
         var packet = new BaseResponsePacket<T>
         {
             HeaderType = ResponseHeaderCache<T>.HeaderType,
             ResultCode = resultCode,
-            Stream     = stream,
+            Stream     = response ?? new T(),
         };
 
-        session.Channel.WriteAndFlushAsync(packet);
-        return Task.CompletedTask;
+        return session.Channel.WriteAndFlushAsync(packet);
     }
 
     protected static Task NotifyAsync<T>(PlayerSession session, T ntf)
@@ -34,7 +33,6 @@ public abstract class PlayerBaseController(IClusterClient clusterClient)
             Stream = ntf,
         };
 
-        session.Channel.WriteAndFlushAsync(packet);
-        return Task.CompletedTask;
+        return session.Channel.WriteAndFlushAsync(packet);
     }
 }

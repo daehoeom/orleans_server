@@ -1,4 +1,4 @@
-﻿namespace ServerLibrary;
+﻿namespace GrainLibrary;
 
 public enum DbType
 {

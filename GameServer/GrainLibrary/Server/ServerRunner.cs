@@ -6,9 +6,9 @@ using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using ServerLibrary.Services;
+using GrainLibrary.Services;
 
-namespace ServerLibrary.Server;
+namespace GrainLibrary.Server;
 
 public class ServerRunner(
     ILogger<ServerRunner> logger,

@@ -3,13 +3,6 @@ using StackExchange.Redis;
 
 namespace Database.Redis;
 
-public interface IRedisService
-{
-    Task<bool> TryAcquireLockAsync(string key, string value, TimeSpan expiry);
-    Task ReleaseLockAsync(string key, string value);
-    IDatabase GetDatabase();
-}
-
 public class RedisService
 {
     private readonly ILogger<RedisService> _logger;
@@ -37,21 +30,5 @@ public class RedisService
             _logger.LogError(e.Message);
             throw;
         }
-    }
-
-    public async Task<bool> TryAcquireLockAsync(string key, string value, TimeSpan expiry)
-    {
-        return await _redis.GetDatabase().StringSetAsync(key, value, expiry, When.NotExists);
-    }
-
-    public async Task ReleaseLockAsync(string key, string value)
-    {
-        var script = @"if redis.call('get', KEYS[1]) == ARGV[1] then
-                    return redis.call('del', KEYS[1])
-                    else
-                        return 0
-                    end";
-
-        await _redis.GetDatabase().ScriptEvaluateAsync(script, [key], [value]);
     }
 }

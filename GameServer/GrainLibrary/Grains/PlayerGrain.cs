@@ -1,6 +1,6 @@
-﻿using ServerLibrary.Models;
+﻿using GrainLibrary.Models;
 
-namespace ServerLibrary.Grains;
+namespace GrainLibrary.Grains;
 
 public interface IPlayerGrain : IGrainWithIntegerKey
 {

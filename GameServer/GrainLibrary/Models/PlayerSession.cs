@@ -3,7 +3,7 @@ using SharedLibrary;
 using SharedLibrary.Packet;
 using SharedLibrary.Packet.Base;
 
-namespace ServerLibrary.Models;
+namespace GrainLibrary.Models;
 
 public class PlayerSession : IDisposable
 {
@@ -34,7 +34,7 @@ public class PlayerSession : IDisposable
             });
     }
 
-    public async Task SendAsync<T>(T body, ResultCode resultCode = ResultCode.Success)
+    public Task SendAsync<T>(T body, ResultCode resultCode = ResultCode.Success)
         where T : class, new()
     {
         var packet = new BaseResponsePacket<T>
@@ -44,10 +44,10 @@ public class PlayerSession : IDisposable
             ResultCode = resultCode,
         };
 
-        await WriteAsync(packet);
+        return Channel.WriteAndFlushAsync(packet);
     }
 
-    public Task NotifyAsync<T>(T ntf)
+    public void Notify<T>(T ntf)
         where T : class, new()
     {
         var packet = new BaseNtfPacket<T>
@@ -56,14 +56,8 @@ public class PlayerSession : IDisposable
             Stream = ntf,
         };
 
-        _ = WriteAsync(packet);
-        return Task.CompletedTask;
+        _ = Channel.WriteAndFlushAsync(packet);
     }
-    
-    private async Task WriteAsync<T>(T packet)
-    {
-        await Channel.WriteAndFlushAsync(packet);
-    } 
     
     public void Dispose() => _authTimeoutCts.Dispose();
 }

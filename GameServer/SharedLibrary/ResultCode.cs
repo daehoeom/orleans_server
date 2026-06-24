@@ -13,4 +13,10 @@ public enum ResultCode
     DbUpdateError,
 
     #endregion
+    
+    #region Player Error
+    
+    PlayerNotFound = -2001,
+    
+    #endregion
 }

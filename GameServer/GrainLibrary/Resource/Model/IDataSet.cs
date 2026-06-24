@@ -1,4 +1,4 @@
-﻿namespace ServerLibrary.Resource.Model;
+namespace GrainLibrary.Resource.Model;
 
 public interface IDataSet<T>
     where T : class

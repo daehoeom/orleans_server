@@ -1,9 +1,9 @@
 ﻿using DotNetty.Transport.Channels;
 using Microsoft.Extensions.Logging;
-using ServerLibrary.Services;
+using GrainLibrary.Services;
 using SharedLibrary.Packet.Base;
 
-namespace ServerLibrary.Server;
+namespace GrainLibrary.Server;
 
 public class GameServerHandler(
     ILogger<GameServerHandler> logger,
@@ -20,14 +20,21 @@ public class GameServerHandler(
             {
                 if (t.IsFaulted)
                 {
-                    logger.LogInformation($"[Error] {message.HeaderType}: {t.Exception?.InnerException?.Message}");
+                    logger.LogError($"[Error] {message.HeaderType}: {t.Exception?.InnerException?.Message}");
                 }
             }, TaskContinuationOptions.OnlyOnFaulted);
     }
-    
+
     public override void ChannelActive(IChannelHandlerContext context)
     {
-        var session = sessionService.AddSession(context);
+        var session = sessionService.AddContext(context);
+        if (session is null)
+        {
+            logger.LogError($"[Server] 세션 추가 실패, 연결 종료: {context.Channel.RemoteAddress}");
+            context.CloseAsync();
+            return;
+        }
+
         session.StartAuthTimeout(AuthTimeout);
         logger.LogInformation($"[Server] Connect Client: {context.Channel.RemoteAddress}");
     }

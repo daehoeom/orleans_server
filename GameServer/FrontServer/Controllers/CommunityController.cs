@@ -1,5 +1,5 @@
-﻿using ServerLibrary.Models;
-using ServerLibrary.Services;
+﻿using GrainLibrary.Models;
+using GrainLibrary.Services;
 using SharedLibrary;
 using SharedLibrary.Packet.Base;
 using SharedLibrary.Packet.Tcp;
@@ -10,16 +10,34 @@ public class CommunityController(IClusterClient clusterClient, SessionService se
     : PlayerBaseController(clusterClient)
 {
     [PacketHandler(PacketHeaderType.SendChat)]
-    public Task SendChatAsync(PlayerSession player, SendChatReq request)
+    public async Task SendChatAsync(PlayerSession player, SendChatReq request)
     {
         // 대화내용 필터 추가
 
-        var ntf = new ChatNtf()
+        switch (request.ChatType)
         {
-            Message = request.Message,
-        };
-        sessionService.Broadcast(ntf);
+            case ChatType.Channel:
+            {
+                var ntf = new ChatNtf { Message = request.Message };
+                sessionService.Broadcast(ntf);
+                break;
+            }
 
-        return SendAsync(player, new SendChatRes());
+            case ChatType.Whisper:
+            {
+                var session = sessionService.GetSession(request.TargetUser);
+                if (session == null)
+                {
+                    await SendAsync<SendChatRes>(player, ResultCode.PlayerNotFound);
+                    return;
+                }
+
+                var ntf = new ChatNtf { Message = request.Message };
+                session.Notify(ntf);
+                break;
+            }
+        }
+
+        await SendAsync(player, response: new SendChatRes());
     }
 }

@@ -1,8 +1,8 @@
 using Database.Db;
 using Database.Redis;
 using GameServer.Controllers;
-using ServerLibrary.Server;
-using ServerLibrary.Services;
+using GrainLibrary.Server;
+using GrainLibrary.Services;
 
 namespace GameServer;
 

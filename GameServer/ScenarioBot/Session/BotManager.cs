@@ -74,6 +74,7 @@ public class BotManager(string host, int port, IScenario scenario, int botCount)
                     initialBytesToStrip: 4));
  
                 pipeline.AddLast(new BotPacketDecoder());
+                pipeline.AddLast(new BotPacketEncoder());
                 pipeline.AddLast(new BotClientHandler(session));
             }));
  

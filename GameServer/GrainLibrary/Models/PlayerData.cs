@@ -1,4 +1,4 @@
-﻿namespace ServerLibrary.Models;
+﻿namespace GrainLibrary.Models;
 
 public class PlayerData
 {

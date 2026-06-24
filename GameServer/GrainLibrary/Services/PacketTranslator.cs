@@ -5,7 +5,7 @@ using MessagePack;
 using SharedLibrary;
 using SharedLibrary.Packet.Base;
 
-namespace ServerLibrary.Services;
+namespace GrainLibrary.Services;
 
 public class PacketDecoder : MessageToMessageDecoder<IByteBuffer>
 {

@@ -7,6 +7,12 @@ namespace SharedLibrary.Packet.Tcp
     public class SendChatReq
     {
         [Key(0)]
+        public ChatType ChatType { get; set; }
+        
+        [Key(1)]
+        public long TargetUser { get; set; }
+        
+        [Key(2)]
         public string Message { get; set; }
     }
 
@@ -14,7 +20,14 @@ namespace SharedLibrary.Packet.Tcp
     [Response(PacketHeaderType.SendChat)]
     public class SendChatRes
     {
+        [Key(0)]
+        public ChatType ChatType { get; set; }
         
+        [Key(1)]
+        public long TargetUser { get; set; }
+        
+        [Key(2)]
+        public string Message { get; set; }
     }
 }
 
