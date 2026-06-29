@@ -93,6 +93,9 @@ public class ServerRunner(
 
     public override async Task StartAsync(CancellationToken _)
     {
+        await databaseService.CheckConnectionAsync();
+        await redisService.ConnectAsync();
+
         var isBindSuccess = await BindServerAsync("127.0.0.1", 35000);
         if (!isBindSuccess)
         {

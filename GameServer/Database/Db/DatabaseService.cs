@@ -26,7 +26,9 @@ public class DatabaseService
     public async Task CheckConnectionAsync()
     {
         using var accountDbConn = Account.Conn.GetConnection();
-        
+        accountDbConn.Open();
+        await accountDbConn.QueryFirstOrDefaultAsync<int>("SELECT 1");
+        _logger.LogInformation($"[AccountDB] Connection Success.");
         
         using var gameDbConn = Game.Conn.GetConnection();
         gameDbConn.Open();
