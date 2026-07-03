@@ -33,15 +33,18 @@ public class DbConnector
     
     private async Task ProcessQueueAsync()
     {
-        using var conn = GetConnection();
-        if (conn.State != ConnectionState.Open)
-        {
-            conn.Open();
-        }
-
         await foreach (var work in _queue.Reader.ReadAllAsync())
         {
-            await work.ExecuteAsync(conn);
+            try
+            {
+                using var conn = GetConnection();
+                await ((MySqlConnection)conn).OpenAsync();
+                await work.ExecuteAsync(conn);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "DB work failed");
+            }
         }
     }
     
@@ -57,24 +60,30 @@ public class DbConnector
     }
     
     public Task<T> PipelineAsync<T>(
-        Func<IDbConnection, Task<T>> dbProcess,
-        Func<Task<T>>? preProcess = null,
-        Func<Task<T>>? postProcess = null)
+        Func<IDbConnection, Task<T>> dbProcess)
     {
         var workContext = new DbPipelineContext<T>
         {
             DbProcess = dbProcess,
-            PreProcess = preProcess,
-            PostProcess = postProcess
         };
 
-        if (!_queue.Writer.TryWrite(workContext))
+        if (_queue.Writer.TryWrite(workContext))
         {
-            _logger.LogError($"Could not write to queue {GetTableName<T>()}");
-            return null;
+            return workContext.CompletionSource.Task;
         }
+        
+        _logger.LogError($"Could not write to queue {GetTableName<T>()}");
+        return Task.FromException<T>(new InvalidOperationException("Failed to enqueue DB work"));
+    }
 
-        return workContext.CompletionSource.Task;
+    public Task<T> WithTransactionAsync<T>(Func<DbTransactionScope, Task<T>> work)
+    {
+        return PipelineAsync(async conn =>
+        {
+            var tx = conn.BeginTransaction();
+            await using var scope = new DbTransactionScope(tx);
+            return await work(scope);
+        });
     }
     
     public Task<int> InsertAsync<T>(T entity) where T : class
@@ -127,4 +136,24 @@ public class DbConnector
     public Task<IEnumerable<T>> QueryAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null,
         int? commandTimeout = null, CommandType? commandType = null)
         => PipelineAsync(conn => conn.QueryAsync<T>(sql, param, transaction, commandTimeout, commandType));
+
+    public Task<T> ExecuteTransactionAsync<T>(Func<IDbConnection, IDbTransaction, Task<T>> work)
+    {
+        return PipelineAsync(async conn =>
+        {
+            using var transaction = conn.BeginTransaction();
+            try
+            {
+                var result = await work(conn, transaction);
+                transaction.Commit();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Transaction rolled back");
+                transaction.Rollback();
+                throw;
+            }
+        });
+    }
 }

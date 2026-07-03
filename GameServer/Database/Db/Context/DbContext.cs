@@ -15,10 +15,8 @@ public class DbContext(DbConnector conn)
     public DbConnector Conn => conn;
     
     public async Task<T> ExecuteAsync<T>(
-        Func<IDbConnection, Task<T>> dbAction,
-        Func<Task<T>>? preAction = null,
-        Func<Task<T>>? postAction = null)
+        Func<IDbConnection, Task<T>> dbAction)
     {
-        return await conn.PipelineAsync(dbAction, preAction, postAction);
+        return await conn.PipelineAsync(dbAction);
     }
 }

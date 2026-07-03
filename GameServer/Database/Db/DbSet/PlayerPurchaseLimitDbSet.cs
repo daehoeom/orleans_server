@@ -18,6 +18,19 @@ public class PlayerPurchaseLimitDbSet(DbConnector conn)
         return await conn.QueryFirstOrDefaultAsync<PlayerPurchaseLimitRow>(sql, param);
     }
 
+    public async Task<IEnumerable<PlayerPurchaseLimitRow>> GetsAsync(long player_id)
+    {
+        var sql = @"SELECT * FROM `player_purchase_limit`
+                WHERE `player_id` = @player_id";
+
+        var param = new
+        {
+            player_id,
+        };
+
+        return await conn.QueryAsync<PlayerPurchaseLimitRow>(sql, param);
+    }
+
     public async Task<int> InsertAsync(PlayerPurchaseLimitRow row)
     {
         row.updated_at = DateTime.UtcNow;
