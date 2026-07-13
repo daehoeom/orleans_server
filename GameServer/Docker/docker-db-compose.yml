@@ -1,0 +1,66 @@
+services:
+ 
+  # ──────────────────────────────────────
+  # MySQL
+  # ──────────────────────────────────────
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 2rjt2fkwnffl      # root 비밀번호
+      MYSQL_USER: clover                       # 기본 유저 (account DB 접근용)
+      MYSQL_PASSWORD: 2rjt2fkwnffl          # clover 비밀번호
+      MYSQL_DATABASE: account                  # 기본 생성 DB
+    command:
+      - --max_connections=3000
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=caching_sha2_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - db_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+ 
+  # ──────────────────────────────────────
+  # Redis
+  # ──────────────────────────────────────
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: unless-stopped
+    command:
+      - redis-server
+      - --requirepass redis_password           # 접속 비밀번호
+      - --maxmemory 512mb                      # 최대 메모리
+      - --maxmemory-policy allkeys-lru         # 메모리 초과 시 LRU 제거
+      - --appendonly yes                       # AOF 영속성 활성화
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - db_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "redis_password", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+ 
+# ──────────────────────────────────────
+# 볼륨 & 네트워크
+# ──────────────────────────────────────
+volumes:
+  mysql_data:
+  redis_data:
+ 
+networks:
+  db_network:
+    driver: bridge
