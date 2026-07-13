@@ -1,4 +1,4 @@
-﻿namespace SharedLibrary;
+namespace SharedLibrary;
 
 public enum ResultCode
 {
@@ -13,19 +13,24 @@ public enum ResultCode
     DbUpdateError,
 
     #endregion
-    
+
     #region Player Error
-    
+
     PlayerNotFound = -2001,
-    
+
     #endregion
-    
-                                                                                                                                                                                                                                                                                                                      
-  #region Shop Error                                                                                                                                                                                                                                                                                               
-                                                                                                                                                                                                                                                                                                                   
-  NotEnoughCurrency = -3001,                                                                                                                                                                                                                                                                                       
-  PurchaseLimitExceeded = -3002,                                                                                                                                                                                                                                                                                   
-  ProductNotFound = -3003,                                                                                                                                                                                                                                                                                         
-                                                                                                                                                                                                                                                                                                                   
-  #endregion    
+
+    #region Shop Error
+
+    NotEnoughCurrency = -3001,
+    PurchaseLimitExceeded = -3002,
+    ProductNotFound = -3003,
+
+    #endregion
+
+    #region Inventory Error
+
+    NotEnoughItemCount = -4001,
+
+    #endregion
 }

@@ -1,5 +1,8 @@
-﻿namespace Database.Db.Row;
+﻿using Database.Db.Attribute;
 
+namespace Database.Db.Row;
+
+[Table("player_purchase_product_limits")]
 public record PlayerPurchaseLimitRow
 {
     public long id { get; set; }
