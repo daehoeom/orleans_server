@@ -1,6 +1,7 @@
 using Database.Db;
 using Database.Redis;
 using GameServer.Controllers;
+using GrainLibrary.Resource;
 using GrainLibrary.Server;
 using GrainLibrary.Services;
 
@@ -21,6 +22,9 @@ public class Program
                 services.AddSingleton<DatabaseService>();
                 services.AddSingleton<RedisService>();
                 services.AddSingleton<SessionService>();
+
+                // 테이블 데이터
+                services.AddSingleton<ResourceLoader>();
  
                 // 패킷 컨트롤러 (역할별로 추가)
                 services.AddSingleton<PlayerBaseController, PlayerController>();

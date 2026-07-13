@@ -1,0 +1,8 @@
+[
+  {
+    "ProductId": 1001,
+    "Currency": "PaidClover",
+    "Price": 100,
+    "LimitCount": 1
+  }
+]

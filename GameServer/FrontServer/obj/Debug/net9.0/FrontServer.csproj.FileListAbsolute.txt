@@ -163,3 +163,4 @@ C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\FrontServer\o
 C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\FrontServer\obj\Debug\net9.0\FrontServer.pdb
 C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\FrontServer\obj\Debug\net9.0\FrontServer.genruntimeconfig.cache
 C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\FrontServer\obj\Debug\net9.0\ref\FrontServer.dll
+C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\FrontServer\bin\Debug\net9.0\TableData\Json\ShopProduct.json

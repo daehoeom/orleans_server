@@ -1,4 +1,5 @@
 ﻿using MessagePack;
+using SharedLibrary.Packet.Base;
 
 namespace SharedLibrary.Packet.Tcp
 {
@@ -12,6 +13,8 @@ namespace SharedLibrary.Packet.Tcp
         public string AccessToken { get; set; } = string.Empty;
     }
 
+    [MessagePackObject]
+    [Response(PacketHeaderType.Auth)]
     public class AuthPlayerRes
     {
         [Key(0)]

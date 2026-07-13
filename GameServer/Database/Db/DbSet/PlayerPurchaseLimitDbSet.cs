@@ -39,14 +39,15 @@ public class PlayerPurchaseLimitDbSet(DbConnector conn)
         return await conn.InsertAsync(row);
     }
 
-    public async Task<int> AddAsync(long player_id, int addValue)
+    public async Task<int> AddAsync(long player_id, int product_id, int addValue)
     {
         var sql = @"UPDATE `player_purchase_limit` SET `purchase_count` = `purchase_count` + @addValue
-                WHERE `player_id` = @player_id";
+                WHERE `player_id` = @player_id AND `product_id` = @product_id";
 
         var param = new
         {
             player_id,
+            product_id,
             addValue,
         };
 

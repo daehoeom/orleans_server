@@ -1,7 +1,7 @@
 using MessagePack;
 using SharedLibrary.Packet.Base;
 
-namespace SharedLibrary.Packet.Tcp
+namespace SharedLibrary.Packet.Tcp.Shop
 {
     [MessagePackObject]
     public class ShopInfo 

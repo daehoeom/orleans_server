@@ -19,4 +19,13 @@ public enum ResultCode
     PlayerNotFound = -2001,
     
     #endregion
+    
+                                                                                                                                                                                                                                                                                                                      
+  #region Shop Error                                                                                                                                                                                                                                                                                               
+                                                                                                                                                                                                                                                                                                                   
+  NotEnoughCurrency = -3001,                                                                                                                                                                                                                                                                                       
+  PurchaseLimitExceeded = -3002,                                                                                                                                                                                                                                                                                   
+  ProductNotFound = -3003,                                                                                                                                                                                                                                                                                         
+                                                                                                                                                                                                                                                                                                                   
+  #endregion    
 }

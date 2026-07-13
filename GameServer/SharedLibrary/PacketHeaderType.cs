@@ -11,6 +11,7 @@ public enum PacketHeaderType
     
     // Shop
     LoadShop = 2000,
+    Purchase = 2001,
     
     // Community
     SendChat = 3000,

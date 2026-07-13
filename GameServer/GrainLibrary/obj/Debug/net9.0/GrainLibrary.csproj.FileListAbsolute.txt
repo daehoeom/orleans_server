@@ -16,3 +16,4 @@ C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\GrainLibrary\
 C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\GrainLibrary\obj\Debug\net9.0\refint\GrainLibrary.dll
 C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\GrainLibrary\obj\Debug\net9.0\GrainLibrary.pdb
 C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\GrainLibrary\obj\Debug\net9.0\ref\GrainLibrary.dll
+C:\Users\planus1992\Desktop\Workspace\Server\GameServer\GameServer\GrainLibrary\bin\Debug\net9.0\TableData\Json\ShopProduct.json

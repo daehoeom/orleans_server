@@ -8,5 +8,5 @@ public enum DbType
 
 public enum RedisDbType
 {
-    
+    Account,
 }

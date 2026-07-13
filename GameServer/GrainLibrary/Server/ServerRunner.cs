@@ -6,12 +6,14 @@ using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using GrainLibrary.Resource;
 using GrainLibrary.Services;
 
 namespace GrainLibrary.Server;
 
 public class ServerRunner(
     ILogger<ServerRunner> logger,
+    ResourceLoader resourceLoader,
     DatabaseService databaseService,
     RedisService redisService,
     GameServerHandler handler)
@@ -93,6 +95,8 @@ public class ServerRunner(
 
     public override async Task StartAsync(CancellationToken _)
     {
+        resourceLoader.LoadAll();
+
         await databaseService.CheckConnectionAsync();
         await redisService.ConnectAsync();
 
