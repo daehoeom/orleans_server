@@ -3,16 +3,14 @@
 ## ##########################
 
 # 빌드 아티팩트 (컴파일 결과물 및 임시 파일)
-[Bin]
-[Obj]
-/[Bb]in/
-/[Oo]bj/
-/[Xx]64/
-/[Xx]86/
-/[Aa]rm/
-/[Aa]rm64/
-/Build/
-/_ReSharper*/
+[Bb]in/
+[Oo]bj/
+[Xx]64/
+[Xx]86/
+[Aa]rm/
+[Aa]rm64/
+Build/
+_ReSharper*/
 
 # 디버그 기호 및 성능 프로파일링 파일
 *.pdb
