@@ -9,7 +9,7 @@ public interface IPlayerWalletGrain : IGrainWithIntegerKey
     Task<long> GetBalanceAsync(CurrencyType currencyType);
     Task<ResultCode> SpendAsync(CurrencyType currencyType, long amount);
     Task<long> AddAsync(CurrencyType currencyType, long amount);
-    Task<ResultCode> IsEnough(CurrencyType currencyType, long amount);
+    Task<ResultCode> IsEnoughAsync(CurrencyType currencyType, long amount);
 }
 
 public class PlayerWalletGrain(DatabaseService dbService) : Grain, IPlayerWalletGrain
@@ -73,7 +73,7 @@ public class PlayerWalletGrain(DatabaseService dbService) : Grain, IPlayerWallet
         return balance;
     }
 
-    public Task<ResultCode> IsEnough(CurrencyType currencyType, long amount)
+    public Task<ResultCode> IsEnoughAsync(CurrencyType currencyType, long amount)
     {
         if (!_wallets.TryGetValue(currencyType, out var wallet) || wallet.Amount < amount)
         {

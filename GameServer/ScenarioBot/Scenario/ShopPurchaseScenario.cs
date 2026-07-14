@@ -22,7 +22,6 @@ public class ShopPurchaseScenario : IScenario
             throw new Exception($"[{Name}] 실패: {purchaseRes.ResultCode}");
         }
 
-        Console.WriteLine(
-            $"[{Name}] 구매 성공: ProductId={purchaseRes.Stream.ProductId}, 잔액={purchaseRes.Stream.RemainAmount}");
+        Console.WriteLine($"[{Name}] 구매 성공: ProductId={purchaseRes.Stream.ProductId}");
     }
 }

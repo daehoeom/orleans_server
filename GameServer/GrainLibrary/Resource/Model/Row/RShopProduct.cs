@@ -15,4 +15,8 @@ public class RShopProduct
     public int LimitCount { get; set; }
 
     public int MaxPurchaseCount { get; set; }
+    
+    public int RewardItemId { get; set; }
+    
+    public int RewardItemCount { get; set; }
 }

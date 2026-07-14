@@ -1,6 +1,7 @@
 using Database.Db;
 using Database.Db.Row;
 using GrainLibrary.Grains.Dto;
+using GrainLibrary.Resource;
 using SharedLibrary;
 
 namespace GrainLibrary.Grains;
@@ -12,13 +13,13 @@ public interface IPlayerUnitGrain : IGrainWithIntegerKey
     Task<ResultCode> AcquireAsync(int unitId, int level, int grade);
     Task<ResultCode> UpdateLevelAsync(int unitId, int level);
     Task<ResultCode> UpdateGradeAsync(int unitId, int grade);
+    Task<ResultCode> GradeUpAsync(int unitId);
 }
 
-public class PlayerUnitGrain(DatabaseService dbService) : Grain, IPlayerUnitGrain
+public class PlayerUnitGrain(DatabaseService dbService, ResourceLoader resourceLoader) : Grain, IPlayerUnitGrain
 {
     private long PlayerId => this.GetPrimaryKeyLong();
 
-    // 활성화 시 DB Row를 DTO로 변환해 캐싱하고, 이후에는 Acquire/Level/Grade 갱신에서 DB와 함께 write-through로 갱신한다.
     private readonly Dictionary<int, UnitDto> _units = new();
 
     public override async Task OnActivateAsync(CancellationToken cancellationToken)
@@ -31,6 +32,7 @@ public class PlayerUnitGrain(DatabaseService dbService) : Grain, IPlayerUnitGrai
                 UnitId = unit.unit_id,
                 Level = unit.level,
                 Grade = unit.grade,
+                Stack = unit.stack,
             };
         }
 
@@ -71,6 +73,7 @@ public class PlayerUnitGrain(DatabaseService dbService) : Grain, IPlayerUnitGrai
             UnitId = unitId,
             Level = level,
             Grade = grade,
+            Stack = 0,
         };
 
         return ResultCode.Success;
@@ -108,6 +111,46 @@ public class PlayerUnitGrain(DatabaseService dbService) : Grain, IPlayerUnitGrai
         }
 
         unit.Grade = grade;
+
+        return ResultCode.Success;
+    }
+
+    public async Task<ResultCode> GradeUpAsync(int unitId)
+    {
+        if (!_units.TryGetValue(unitId, out var unit))
+        {
+            return ResultCode.NotFoundUnit;
+        }
+
+        var rGrade = resourceLoader.UnitGrade.Find(unit.Grade);
+        if (rGrade is null)
+        {
+            return ResultCode.MaxGradeUnit;
+        }
+
+        if (rGrade.RequireStack > unit.Stack)
+        {
+            return ResultCode.NotEnoughUnitStack;
+        }
+
+        var walletGrain = GrainFactory.GetGrain<IPlayerWalletGrain>(PlayerId);
+        var retCode = await walletGrain.IsEnoughAsync(rGrade.RequireCurrencyType, rGrade.RequireCurrencyAmount);
+        if (retCode != ResultCode.Success)
+        {
+            return retCode;
+        }
+
+        retCode = await walletGrain.SpendAsync(rGrade.RequireCurrencyType, rGrade.RequireCurrencyAmount);
+        if (retCode != ResultCode.Success)
+        {
+            return retCode;
+        }
+
+        var updateResult = await UpdateGradeAsync(unitId, rGrade.NextGrade);
+        if (updateResult != ResultCode.Success)
+        {
+            return updateResult;
+        }
 
         return ResultCode.Success;
     }

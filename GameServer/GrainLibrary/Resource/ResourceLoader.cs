@@ -19,16 +19,19 @@ public class ResourceLoader(ILogger<ResourceLoader> logger)
         Converters = { new JsonStringEnumConverter() },
     };
 
-    public ShopProductDataSet ShopProduct { get; private set; } = null!;
-    public LevelDataSet Level { get; private set; } = null!;
+    public RShopProductDataSet ShopProduct { get; private set; } = null!;
+    public RLevelDataSet Level { get; private set; } = null!;
+    public RUnitGradeDataSet UnitGrade { get; private set; } = null!;
+    public RItemDataSet Item { get; private set; } = null!;
 
     public void LoadAll()
     {
         var errors = new List<string>();
 
-        // 테이블을 추가할 때마다 이곳에 명시적으로 등록한다.
-        ShopProduct = Load<ShopProductDataSet, RShopProduct>(errors);
-        Level = Load<LevelDataSet, RLevel>(errors);
+        ShopProduct = Load<RShopProductDataSet, RShopProduct>(errors);
+        Level = Load<RLevelDataSet, RLevel>(errors);
+        UnitGrade = Load<RUnitGradeDataSet, RUnitGrade>(errors);
+        Item = Load<RItemDataSet, RItem>(errors);
 
         if (errors.Count > 0)
         {

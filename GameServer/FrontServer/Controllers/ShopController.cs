@@ -15,7 +15,7 @@ public class ShopController(IClusterClient clusterClient)
     {
         var shopGrain = _clusterClient.GetGrain<IPlayerShopGrain>(player.SessionId);
 
-        var (result, remain) = await shopGrain.PurchaseProductAsync(player.SessionId, req.ProductId, req.Count);
+        var result = await shopGrain.PurchaseProductAsync(player.SessionId, req.ProductId, req.Count);
         if (result != ResultCode.Success)
         {
             await SendAsync<PurchaseProductRes>(player, result);
@@ -25,7 +25,6 @@ public class ShopController(IClusterClient clusterClient)
         await SendAsync(player, response: new PurchaseProductRes
         {
             ProductId = req.ProductId,
-            RemainAmount = remain,
         });
     }
 }

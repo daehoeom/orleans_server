@@ -19,9 +19,6 @@ namespace SharedLibrary.Packet.Tcp.Shop
     {
         [Key(0)]
         public int ProductId { get; set; }
-        
-        [Key(1)]
-        public int RemainAmount { get; set; }
     }
 }
 

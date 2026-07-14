@@ -1,7 +1,9 @@
-﻿using SharedLibrary;
+﻿using GrainLibrary.Resource.Attribute;
+using SharedLibrary;
 
 namespace GrainLibrary.Resource.Model.Row;
 
+[ResourceTable("Item")]
 public class RItem
 {
     public int Id { get; set; }

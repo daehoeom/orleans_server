@@ -14,6 +14,8 @@ public class PlayerUnitRow
     public int level { get; set; }
 
     public int grade { get; set; }
+    
+    public int stack { get; set; }
 
     public DateTime updated_at { get; set; }
 

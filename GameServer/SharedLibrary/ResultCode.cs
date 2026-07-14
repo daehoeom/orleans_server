@@ -23,8 +23,8 @@ public enum ResultCode
     #region Shop Error
 
     NotEnoughCurrency = -3001,
-    PurchaseLimitExceeded = -3002,
-    ProductNotFound = -3003,
+    PurchaseLimitExceeded,
+    ProductNotFound,
 
     #endregion
 
@@ -37,6 +37,9 @@ public enum ResultCode
     #region Unit Error
 
     AlreadyOwnedUnit = -5001,
+    MaxGradeUnit,
+    NotFoundUnit,
+    NotEnoughUnitStack,
 
     #endregion
 }

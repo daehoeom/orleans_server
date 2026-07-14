@@ -1,0 +1,17 @@
+[
+  {
+    "Grade": 1,
+    "RequiredGold": 100,
+    "NextGrade": 2
+  },
+  {
+    "Grade": 2,
+    "RequiredGold": 200,
+    "NextGrade": 3
+  },
+  {
+    "Grade": 3,
+    "RequiredGold": 300,
+    "NextGrade": 4
+  }
+]

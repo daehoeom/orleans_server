@@ -7,4 +7,6 @@ public class UnitDto
     public int Level { get; set; }
 
     public int Grade { get; set; }
+    
+    public int Stack { get; set; }
 }

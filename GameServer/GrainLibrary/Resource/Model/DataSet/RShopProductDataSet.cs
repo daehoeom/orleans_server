@@ -3,7 +3,7 @@ using SharedLibrary;
 
 namespace GrainLibrary.Resource.Model.DataSet;
 
-public class ShopProductDataSet : IDataSet<RShopProduct>
+public class RShopProductDataSet : IDataSet<RShopProduct>
 {
     private readonly Dictionary<int, RShopProduct> _products = new();
 

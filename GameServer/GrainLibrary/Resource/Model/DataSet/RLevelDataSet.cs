@@ -2,7 +2,7 @@ using GrainLibrary.Resource.Model.Row;
 
 namespace GrainLibrary.Resource.Model.DataSet;
 
-public class LevelDataSet : IDataSet<RLevel>
+public class RLevelDataSet : IDataSet<RLevel>
 {
     private readonly Dictionary<int, RLevel> _levels = new();
 
