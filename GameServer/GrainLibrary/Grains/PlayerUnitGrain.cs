@@ -48,8 +48,13 @@ public class PlayerUnitGrain(DatabaseService dbService, ResourceLoader resourceL
 
     public async Task<ResultCode> AddOrUpdateAsync(int unitId, int level)
     {
-        if (_units.TryGetValue(unitId, out _))
+        if (_units.TryGetValue(unitId, out var unit))
         {
+            if (unit.Stack >= SharedConstant.MAX_UNIT_STACK)
+            {
+                return ResultCode.MaxUnitStack;
+            }
+            
             var affectedRow = await dbService.Game.Units.AddStackAsync(PlayerId, unitId);
             if (affectedRow <= 0)
             {
@@ -92,7 +97,7 @@ public class PlayerUnitGrain(DatabaseService dbService, ResourceLoader resourceL
         var rUnitLevel = resourceLoader.UnitLevel.Find(unitId, unit.Level);
         if (rUnitLevel is null)
         {
-            return ResultCode.MaxGradeUnit;
+            return ResultCode.MaxLevelUnit;
         }
 
         if (rUnitLevel.RequireStack > unit.Stack)

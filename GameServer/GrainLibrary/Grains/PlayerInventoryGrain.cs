@@ -17,7 +17,6 @@ public class PlayerInventoryGrain(DatabaseService dbService) : Grain, IPlayerInv
 {
     private long PlayerId => this.GetPrimaryKeyLong();
 
-    // 활성화 시 DB Row를 DTO로 변환해 캐싱하고, 이후에는 Add/Spend에서 DB와 함께 write-through로 갱신한다.
     private readonly Dictionary<int, InventoryDto> _items = new();
 
     public override async Task OnActivateAsync(CancellationToken cancellationToken)

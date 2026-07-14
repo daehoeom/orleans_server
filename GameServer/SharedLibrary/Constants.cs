@@ -37,4 +37,5 @@ public enum UnitGradeType
 public static class SharedConstant
 {
     public static readonly long MAX_CURRENCY_AMOUNT = 2_100_000_000;
+    public static readonly int MAX_UNIT_STACK = 99_999;
 }

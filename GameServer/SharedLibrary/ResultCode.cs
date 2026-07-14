@@ -38,7 +38,7 @@ public enum ResultCode
 
     AlreadyOwnedUnit = -5001,
     MaxUnitStack,
-    MaxGradeUnit,
+    MaxLevelUnit,
     NotFoundUnit,
     NotEnoughUnitStack,
 

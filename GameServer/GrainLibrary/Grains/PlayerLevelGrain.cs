@@ -73,14 +73,12 @@ public class PlayerLevelGrain(DatabaseService dbService, ResourceLoader resource
         var remainExp = _exp + exp;
         RLevel? rLevel;
 
-        // 다음 레벨에 필요한 경험치를 넘기면 레벨업하고, 남은 경험치는 다음 레벨로 이월한다.
         while ((rLevel = resourceLoader.Level.Find(level)) is not null && remainExp >= rLevel.RequiredExp)
         {
             remainExp -= rLevel.RequiredExp;
             level = rLevel.NextLevel;
         }
 
-        // 최대 레벨(더 이상 다음 레벨 데이터가 없음)에서는 경험치가 더 이상 누적되지 않는다.
         if (rLevel is null)
         {
             remainExp = 0;
