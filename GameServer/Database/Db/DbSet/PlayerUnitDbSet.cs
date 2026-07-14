@@ -55,22 +55,21 @@ public class PlayerUnitDbSet(DbConnector conn)
         return await conn.ExecuteAsync(sql, param);
     }
 
-    public async Task<int> UpdateGradeAsync(long player_id, int unit_id, int grade)
+    public async Task<int> AddStackAsync(long player_id, int unit_id)
     {
-        var sql = @"UPDATE `player_units` SET `grade` = @grade, `updated_at` = @updated_at
+        var sql = @"UPDATE `player_units` SET `stack` = `stack` + 1, `updated_at` = @updated_at
                 WHERE `player_id` = @player_id AND `unit_id` = @unit_id";
 
         var param = new
         {
             player_id,
             unit_id,
-            grade,
             updated_at = DateTime.UtcNow,
         };
 
         return await conn.ExecuteAsync(sql, param);
     }
-
+    
     public async Task<int> DeleteAsync(long player_id, int unit_id)
     {
         var sql = @"DELETE FROM `player_units`

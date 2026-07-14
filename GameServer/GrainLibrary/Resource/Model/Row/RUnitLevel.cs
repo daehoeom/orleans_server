@@ -3,16 +3,18 @@ using SharedLibrary;
 
 namespace GrainLibrary.Resource.Model.Row;
 
-[ResourceTable("UnitGrade")]
-public class RUnitGrade
+[ResourceTable("UnitLevel")]
+public class RUnitLevel
 {
-    public int Grade { get; set; }
+    public int Id { get; set; }
+
+    public int UnitId { get; set; }
+
+    public int Level { get; set; }
 
     public int RequireStack { get; set; }
-    
-    public CurrencyType RequireCurrencyType { get; set; }
-    
-    public int RequireCurrencyAmount { get; set; }
 
-    public int NextGrade { get; set; }
+    public CurrencyType RequireCurrencyType { get; set; }
+
+    public int RequireCurrencyAmount { get; set; }
 }

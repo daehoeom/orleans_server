@@ -21,7 +21,8 @@ public class ResourceLoader(ILogger<ResourceLoader> logger)
 
     public RShopProductDataSet ShopProduct { get; private set; } = null!;
     public RLevelDataSet Level { get; private set; } = null!;
-    public RUnitGradeDataSet UnitGrade { get; private set; } = null!;
+    public RUnitDataSet Unit { get; private set; } = null!;
+    public RUnitLevelDataSet UnitLevel { get; private set; } = null!;
     public RItemDataSet Item { get; private set; } = null!;
 
     public void LoadAll()
@@ -30,7 +31,8 @@ public class ResourceLoader(ILogger<ResourceLoader> logger)
 
         ShopProduct = Load<RShopProductDataSet, RShopProduct>(errors);
         Level = Load<RLevelDataSet, RLevel>(errors);
-        UnitGrade = Load<RUnitGradeDataSet, RUnitGrade>(errors);
+        Unit = Load<RUnitDataSet, RUnit>(errors);
+        UnitLevel = Load<RUnitLevelDataSet, RUnitLevel>(errors);
         Item = Load<RItemDataSet, RItem>(errors);
 
         if (errors.Count > 0)

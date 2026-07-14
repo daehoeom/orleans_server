@@ -37,6 +37,7 @@ public enum ResultCode
     #region Unit Error
 
     AlreadyOwnedUnit = -5001,
+    MaxUnitStack,
     MaxGradeUnit,
     NotFoundUnit,
     NotEnoughUnitStack,

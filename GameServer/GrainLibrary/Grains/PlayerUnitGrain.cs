@@ -10,10 +10,8 @@ public interface IPlayerUnitGrain : IGrainWithIntegerKey
 {
     Task<UnitDto?> GetAsync(int unitId);
     Task<IReadOnlyList<UnitDto>> GetAllAsync();
-    Task<ResultCode> AcquireAsync(int unitId, int level, int grade);
-    Task<ResultCode> UpdateLevelAsync(int unitId, int level);
-    Task<ResultCode> UpdateGradeAsync(int unitId, int grade);
-    Task<ResultCode> GradeUpAsync(int unitId);
+    Task<ResultCode> AddOrUpdateAsync(int unitId, int level);
+    Task<ResultCode> LevelUpAsync(int unitId);
 }
 
 public class PlayerUnitGrain(DatabaseService dbService, ResourceLoader resourceLoader) : Grain, IPlayerUnitGrain
@@ -31,7 +29,6 @@ public class PlayerUnitGrain(DatabaseService dbService, ResourceLoader resourceL
             {
                 UnitId = unit.unit_id,
                 Level = unit.level,
-                Grade = unit.grade,
                 Stack = unit.stack,
             };
         }
@@ -49,43 +46,74 @@ public class PlayerUnitGrain(DatabaseService dbService, ResourceLoader resourceL
         return Task.FromResult<IReadOnlyList<UnitDto>>(_units.Values.ToList());
     }
 
-    public async Task<ResultCode> AcquireAsync(int unitId, int level, int grade)
+    public async Task<ResultCode> AddOrUpdateAsync(int unitId, int level)
     {
-        if (_units.ContainsKey(unitId))
+        if (_units.TryGetValue(unitId, out _))
         {
-            return ResultCode.AlreadyOwnedUnit;
-        }
+            var affectedRow = await dbService.Game.Units.AddStackAsync(PlayerId, unitId);
+            if (affectedRow <= 0)
+            {
+                return ResultCode.DbUpdateError;
+            }
 
-        var insertedRow = await dbService.Game.Units.InsertAsync(new PlayerUnitRow
-        {
-            player_id = PlayerId,
-            unit_id = unitId,
-            level = level,
-            grade = grade,
-        });
-        if (insertedRow <= 0)
-        {
-            return ResultCode.DbInsertError;
+            _units[unitId].Stack++;
         }
-
-        _units[unitId] = new UnitDto
+        else
         {
-            UnitId = unitId,
-            Level = level,
-            Grade = grade,
-            Stack = 0,
-        };
+            var insertedRow = await dbService.Game.Units.InsertAsync(new PlayerUnitRow
+            {
+                player_id = PlayerId,
+                unit_id = unitId,
+                level = level,
+            });
+            if (insertedRow <= 0)
+            {
+                return ResultCode.DbInsertError;
+            }
+
+            _units[unitId] = new UnitDto
+            {
+                UnitId = unitId,
+                Level = level,
+                Stack = 0,
+            };
+        }
 
         return ResultCode.Success;
     }
 
-    public async Task<ResultCode> UpdateLevelAsync(int unitId, int level)
+    public async Task<ResultCode> LevelUpAsync(int unitId)
     {
         if (!_units.TryGetValue(unitId, out var unit))
         {
-            return ResultCode.NotFoundResource;
+            return ResultCode.NotFoundUnit;
         }
 
+        var rUnitLevel = resourceLoader.UnitLevel.Find(unitId, unit.Level);
+        if (rUnitLevel is null)
+        {
+            return ResultCode.MaxGradeUnit;
+        }
+
+        if (rUnitLevel.RequireStack > unit.Stack)
+        {
+            return ResultCode.NotEnoughUnitStack;
+        }
+
+        var walletGrain = GrainFactory.GetGrain<IPlayerWalletGrain>(PlayerId);
+        var retCode = await walletGrain.IsEnoughAsync(rUnitLevel.RequireCurrencyType, rUnitLevel.RequireCurrencyAmount);
+        if (retCode != ResultCode.Success)
+        {
+            return retCode;
+        }
+
+        retCode = await walletGrain.SpendAsync(rUnitLevel.RequireCurrencyType, rUnitLevel.RequireCurrencyAmount);
+        if (retCode != ResultCode.Success)
+        {
+            return retCode;
+        }
+
+        var level = unit.Level + 1;
         var affectedRow = await dbService.Game.Units.UpdateLevelAsync(PlayerId, unitId, level);
         if (affectedRow <= 0)
         {
@@ -93,64 +121,6 @@ public class PlayerUnitGrain(DatabaseService dbService, ResourceLoader resourceL
         }
 
         unit.Level = level;
-
-        return ResultCode.Success;
-    }
-
-    public async Task<ResultCode> UpdateGradeAsync(int unitId, int grade)
-    {
-        if (!_units.TryGetValue(unitId, out var unit))
-        {
-            return ResultCode.NotFoundResource;
-        }
-
-        var affectedRow = await dbService.Game.Units.UpdateGradeAsync(PlayerId, unitId, grade);
-        if (affectedRow <= 0)
-        {
-            return ResultCode.DbUpdateError;
-        }
-
-        unit.Grade = grade;
-
-        return ResultCode.Success;
-    }
-
-    public async Task<ResultCode> GradeUpAsync(int unitId)
-    {
-        if (!_units.TryGetValue(unitId, out var unit))
-        {
-            return ResultCode.NotFoundUnit;
-        }
-
-        var rGrade = resourceLoader.UnitGrade.Find(unit.Grade);
-        if (rGrade is null)
-        {
-            return ResultCode.MaxGradeUnit;
-        }
-
-        if (rGrade.RequireStack > unit.Stack)
-        {
-            return ResultCode.NotEnoughUnitStack;
-        }
-
-        var walletGrain = GrainFactory.GetGrain<IPlayerWalletGrain>(PlayerId);
-        var retCode = await walletGrain.IsEnoughAsync(rGrade.RequireCurrencyType, rGrade.RequireCurrencyAmount);
-        if (retCode != ResultCode.Success)
-        {
-            return retCode;
-        }
-
-        retCode = await walletGrain.SpendAsync(rGrade.RequireCurrencyType, rGrade.RequireCurrencyAmount);
-        if (retCode != ResultCode.Success)
-        {
-            return retCode;
-        }
-
-        var updateResult = await UpdateGradeAsync(unitId, rGrade.NextGrade);
-        if (updateResult != ResultCode.Success)
-        {
-            return updateResult;
-        }
 
         return ResultCode.Success;
     }
