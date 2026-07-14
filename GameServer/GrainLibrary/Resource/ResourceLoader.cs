@@ -2,8 +2,8 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using GrainLibrary.Resource.Attribute;
-using GrainLibrary.Resource.DataSet;
 using GrainLibrary.Resource.Model;
+using GrainLibrary.Resource.Model.DataSet;
 using GrainLibrary.Resource.Model.Row;
 using Microsoft.Extensions.Logging;
 
@@ -20,13 +20,15 @@ public class ResourceLoader(ILogger<ResourceLoader> logger)
     };
 
     public ShopProductDataSet ShopProduct { get; private set; } = null!;
+    public LevelDataSet Level { get; private set; } = null!;
 
     public void LoadAll()
     {
         var errors = new List<string>();
 
         // 테이블을 추가할 때마다 이곳에 명시적으로 등록한다.
-        ShopProduct = Load<ShopProductDataSet, ShopProductRow>(errors);
+        ShopProduct = Load<ShopProductDataSet, RShopProduct>(errors);
+        Level = Load<LevelDataSet, RLevel>(errors);
 
         if (errors.Count > 0)
         {

@@ -1,0 +1,14 @@
+[
+  {
+    "Level": 1,
+    "RequiredExp": 100
+  },
+  {
+    "Level": 2,
+    "RequiredExp": 200
+  },
+  {
+    "Level": 3,
+    "RequiredExp": 300
+  }
+]

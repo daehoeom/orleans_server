@@ -4,7 +4,7 @@ using SharedLibrary;
 namespace GrainLibrary.Resource.Model.Row;
 
 [ResourceTable("ShopProduct")]
-public class ShopProductRow
+public class RShopProduct
 {
     public int ProductId { get; set; }
 
@@ -13,4 +13,6 @@ public class ShopProductRow
     public int Price { get; set; }
 
     public int LimitCount { get; set; }
+
+    public int MaxPurchaseCount { get; set; }
 }

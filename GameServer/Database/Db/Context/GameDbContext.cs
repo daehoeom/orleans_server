@@ -10,4 +10,5 @@ public class GameDbContext(DbConnector conn)
     public PlayerPurchaseLimitDbSet PurchaseLimit { get; private set; } = new(conn);
     public PlayerUnitDbSet Units { get; private set; } = new(conn);
     public PlayerInventoryDbSet Inventory { get; private set; } = new(conn);
+    public PlayerLevelDbSet Level { get; private set; } = new(conn);
 }

@@ -1,5 +1,6 @@
 using Database.Db;
 using Database.Db.Row;
+using GrainLibrary.Grains.Dto;
 using SharedLibrary;
 
 namespace GrainLibrary.Grains;
@@ -7,7 +8,7 @@ namespace GrainLibrary.Grains;
 public interface IPlayerInventoryGrain : IGrainWithIntegerKey
 {
     Task<int> GetCountAsync(int itemId);
-    Task<IReadOnlyList<PlayerInventoryRow>> GetAllAsync();
+    Task<IReadOnlyList<InventoryDto>> GetAllAsync();
     Task<ResultCode> AddAsync(int itemId, int count);
     Task<ResultCode> SpendAsync(int itemId, int count);
 }
@@ -16,15 +17,19 @@ public class PlayerInventoryGrain(DatabaseService dbService) : Grain, IPlayerInv
 {
     private long PlayerId => this.GetPrimaryKeyLong();
 
-    // 활성화 시 DB에서 한 번만 읽어 캐싱하고, 이후에는 Add/Spend에서 DB와 함께 write-through로 갱신한다.
-    private readonly Dictionary<int, PlayerInventoryRow> _items = new();
+    // 활성화 시 DB Row를 DTO로 변환해 캐싱하고, 이후에는 Add/Spend에서 DB와 함께 write-through로 갱신한다.
+    private readonly Dictionary<int, InventoryDto> _items = new();
 
     public override async Task OnActivateAsync(CancellationToken cancellationToken)
     {
         var items = await dbService.Game.Inventory.GetsAsync(PlayerId);
         foreach (var item in items)
         {
-            _items[item.item_id] = item;
+            _items[item.item_id] = new InventoryDto
+            {
+                ItemId = item.item_id,
+                Count = item.count,
+            };
         }
 
         await base.OnActivateAsync(cancellationToken);
@@ -32,12 +37,12 @@ public class PlayerInventoryGrain(DatabaseService dbService) : Grain, IPlayerInv
 
     public Task<int> GetCountAsync(int itemId)
     {
-        return Task.FromResult(_items.GetValueOrDefault(itemId)?.count ?? 0);
+        return Task.FromResult(_items.GetValueOrDefault(itemId)?.Count ?? 0);
     }
 
-    public Task<IReadOnlyList<PlayerInventoryRow>> GetAllAsync()
+    public Task<IReadOnlyList<InventoryDto>> GetAllAsync()
     {
-        return Task.FromResult<IReadOnlyList<PlayerInventoryRow>>(_items.Values.ToList());
+        return Task.FromResult<IReadOnlyList<InventoryDto>>(_items.Values.ToList());
     }
 
     public async Task<ResultCode> AddAsync(int itemId, int count)
@@ -55,25 +60,27 @@ public class PlayerInventoryGrain(DatabaseService dbService) : Grain, IPlayerInv
                 return ResultCode.DbUpdateError;
             }
 
-            item.count += count;
+            item.Count += count;
 
             return ResultCode.Success;
         }
 
-        var newItem = new PlayerInventoryRow
+        var insertedRow = await dbService.Game.Inventory.InsertAsync(new PlayerInventoryRow
         {
             player_id = PlayerId,
             item_id = itemId,
             count = count,
-        };
-
-        var insertedRow = await dbService.Game.Inventory.InsertAsync(newItem);
+        });
         if (insertedRow <= 0)
         {
             return ResultCode.DbInsertError;
         }
 
-        _items[itemId] = newItem;
+        _items[itemId] = new InventoryDto
+        {
+            ItemId = itemId,
+            Count = count,
+        };
 
         return ResultCode.Success;
     }
@@ -85,7 +92,7 @@ public class PlayerInventoryGrain(DatabaseService dbService) : Grain, IPlayerInv
             return ResultCode.InvalidParameter;
         }
 
-        if (!_items.TryGetValue(itemId, out var item) || item.count < count)
+        if (!_items.TryGetValue(itemId, out var item) || item.Count < count)
         {
             return ResultCode.NotEnoughItemCount;
         }
@@ -96,7 +103,7 @@ public class PlayerInventoryGrain(DatabaseService dbService) : Grain, IPlayerInv
             return ResultCode.DbUpdateError;
         }
 
-        item.count -= count;
+        item.Count -= count;
 
         return ResultCode.Success;
     }

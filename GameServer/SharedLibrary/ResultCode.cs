@@ -33,4 +33,10 @@ public enum ResultCode
     NotEnoughItemCount = -4001,
 
     #endregion
+
+    #region Unit Error
+
+    AlreadyOwnedUnit = -5001,
+
+    #endregion
 }

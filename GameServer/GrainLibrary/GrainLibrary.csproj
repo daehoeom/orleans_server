@@ -22,7 +22,6 @@
 
     <ItemGroup>
       <Folder Include="Manager\" />
-      <Folder Include="Resource\Model\Row\" />
     </ItemGroup>
 
     <ItemGroup>
