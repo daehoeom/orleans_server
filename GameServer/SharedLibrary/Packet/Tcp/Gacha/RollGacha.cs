@@ -1,5 +1,6 @@
 using MessagePack;
 using SharedLibrary.Packet.Base;
+using SharedLibrary.Packet.Data;
 
 namespace SharedLibrary.Packet.Tcp.Gacha
 {
@@ -11,19 +12,6 @@ namespace SharedLibrary.Packet.Tcp.Gacha
 
         [Key(1)]
         public int Count { get; set; }
-    }
-
-    [MessagePackObject]
-    public class GachaUnitResult
-    {
-        [Key(0)]
-        public int UnitId { get; set; }
-
-        [Key(1)]
-        public int Level { get; set; }
-
-        [Key(2)]
-        public int Stack { get; set; }
     }
 
     [MessagePackObject]

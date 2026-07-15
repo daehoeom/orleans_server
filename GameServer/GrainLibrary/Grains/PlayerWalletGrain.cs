@@ -1,12 +1,14 @@
 using Database.Db;
 using GrainLibrary.Grains.Dto;
 using SharedLibrary;
+using SharedLibrary.Packet.Data;
 
 namespace GrainLibrary.Grains;
 
 public interface IPlayerWalletGrain : IGrainWithIntegerKey
 {
     Task<long> GetBalanceAsync(CurrencyType currencyType);
+    Task<List<WalletInfo>> GetAllBalanceAsync();
     Task<ResultCode> SpendAsync(CurrencyType currencyType, long amount);
     Task<long> AddAsync(CurrencyType currencyType, long amount);
     Task<ResultCode> IsEnoughAsync(CurrencyType currencyType, long amount);
@@ -38,6 +40,17 @@ public class PlayerWalletGrain(DatabaseService dbService) : Grain, IPlayerWallet
     public Task<long> GetBalanceAsync(CurrencyType currencyType)
     {
         return Task.FromResult(_wallets.GetValueOrDefault(currencyType)?.Amount ?? 0);
+    }
+
+    public Task<List<WalletInfo>> GetAllBalanceAsync()
+    {
+        var result = _wallets.Select(p => new WalletInfo
+        {
+            CurrencyType = p.Value.CurrencyType,
+            Amount = p.Value.Amount,
+        }).ToList();
+
+        return Task.FromResult(result);
     }
 
     public async Task<ResultCode> SpendAsync(CurrencyType currencyType, long amount)

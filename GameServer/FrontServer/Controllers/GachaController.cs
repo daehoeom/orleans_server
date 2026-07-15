@@ -3,6 +3,7 @@ using GrainLibrary.Models;
 using GrainLibrary.Services;
 using SharedLibrary;
 using SharedLibrary.Packet.Base;
+using SharedLibrary.Packet.Data;
 using SharedLibrary.Packet.Tcp.Gacha;
 
 namespace GameServer.Controllers;

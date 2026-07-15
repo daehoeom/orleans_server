@@ -12,15 +12,23 @@ public class PlayerController(IClusterClient clusterClient)
     : PlayerBaseController(clusterClient)
 {
     [PacketHandler(PacketHeaderType.LoadPlayer)]
-    public async Task LoadPlayerAsync(PlayerSession player, LoadPlayerReq req)
+    public async Task LoadPlayerAsync(PlayerSession player, LoadPlayerReq _)
     {
         var playerGrain = _clusterClient.GetGrain<IPlayerGrain>(player.SessionId);
 
         var data = await playerGrain.GetPlayerData();
+
+        var walletGrain = _clusterClient.GetGrain<IPlayerWalletGrain>(player.SessionId);
+        var walletInfo = await walletGrain.GetAllBalanceAsync();
+
+        var unitGrain = _clusterClient.GetGrain<IPlayerUnitGrain>(player.SessionId);
+        var unitInfo = await unitGrain.GetAllInfoAsync();
         
         await SendAsync(player, response: new LoadPlayerRes
         {
             PlayerId = data.PlayerId,
+            WalletInfo = walletInfo,
+            UnitInfo = unitInfo,
         });
     }
 
