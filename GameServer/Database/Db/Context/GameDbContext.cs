@@ -11,4 +11,5 @@ public class GameDbContext(DbConnector conn)
     public PlayerUnitDbSet Units { get; private set; } = new(conn);
     public PlayerInventoryDbSet Inventory { get; private set; } = new(conn);
     public PlayerLevelDbSet Level { get; private set; } = new(conn);
+    public PlayerStageStateDbSet StageStates { get; private set; } = new(conn);
 }

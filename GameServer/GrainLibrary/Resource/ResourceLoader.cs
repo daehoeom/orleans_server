@@ -24,6 +24,8 @@ public class ResourceLoader(ILogger<ResourceLoader> logger)
     public RUnitDataSet Unit { get; private set; } = null!;
     public RUnitLevelDataSet UnitLevel { get; private set; } = null!;
     public RItemDataSet Item { get; private set; } = null!;
+    public RGachaDataSet Gacha { get; private set; } = null!;
+    public RGachaUnitDataSet GachaUnit { get; private set; } = null!;
 
     public void LoadAll()
     {
@@ -34,6 +36,8 @@ public class ResourceLoader(ILogger<ResourceLoader> logger)
         Unit = Load<RUnitDataSet, RUnit>(errors);
         UnitLevel = Load<RUnitLevelDataSet, RUnitLevel>(errors);
         Item = Load<RItemDataSet, RItem>(errors);
+        Gacha = Load<RGachaDataSet, RGacha>(errors);
+        GachaUnit = Load<RGachaUnitDataSet, RGachaUnit>(errors);
 
         if (errors.Count > 0)
         {

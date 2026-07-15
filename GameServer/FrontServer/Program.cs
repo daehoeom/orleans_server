@@ -30,6 +30,7 @@ public class Program
                 services.AddSingleton<PlayerBaseController, PlayerController>();
                 services.AddSingleton<PlayerBaseController, ShopController>();
                 services.AddSingleton<PlayerBaseController, CommunityController>();
+                services.AddSingleton<PlayerBaseController, GachaController>();
  
                 // 패킷 디스패처 & DotNetty 핸들러
                 services.AddSingleton<PacketHandler>();

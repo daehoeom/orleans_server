@@ -6,6 +6,9 @@ public enum CurrencyType
     PaidClover = 1,
     FreeClover = 2,
     Gold = 3,
+    
+    GachaTicket = 10,
+    PremiumGachaTicket = 11,
 }
 
 public enum ChatType

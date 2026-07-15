@@ -16,4 +16,7 @@ public enum PacketHeaderType
     // Community
     SendChat = 3000,
     ChatNtf = 3001,
+
+    // Gacha
+    RollGacha = 4000,
 }

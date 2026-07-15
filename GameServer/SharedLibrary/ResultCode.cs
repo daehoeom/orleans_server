@@ -43,4 +43,11 @@ public enum ResultCode
     NotEnoughUnitStack,
 
     #endregion
+
+    #region Gacha Error
+
+    GachaNotFound = -6001,
+    GachaPoolEmpty,
+
+    #endregion
 }
