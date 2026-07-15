@@ -23,12 +23,16 @@ public class PlayerController(IClusterClient clusterClient)
 
         var unitGrain = _clusterClient.GetGrain<IPlayerUnitGrain>(player.SessionId);
         var unitInfo = await unitGrain.GetAllInfoAsync();
+
+        var stageGrain = _clusterClient.GetGrain<IPlayerStageGrain>(player.SessionId);
+        var stageInfo = await stageGrain.GetAllInfoAsync();
         
         await SendAsync(player, response: new LoadPlayerRes
         {
             PlayerId = data.PlayerId,
             WalletInfo = walletInfo,
             UnitInfo = unitInfo,
+            StageInfo = stageInfo,
         });
     }
 

@@ -24,6 +24,9 @@ namespace SharedLibrary.Packet.Tcp
         
         [Key(3)]
         public List<StageInfo> StageInfo { get; set; } = new List<StageInfo>();
+        
+        [Key(4)]
+        public StaminaInfo StaminaInfo { get; set; } = new StaminaInfo();
     }
 }
 

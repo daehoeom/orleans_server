@@ -1,0 +1,5 @@
+{
+  "StaminaRecoverIntervalSeconds": 300,
+  "StaminaRecoverAmount": 1,
+  "StaminaDefaultMaxAmount": 120
+}

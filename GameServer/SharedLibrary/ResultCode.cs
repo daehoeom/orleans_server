@@ -17,6 +17,7 @@ public enum ResultCode
     #region Player Error
 
     PlayerNotFound = -2001,
+    NotEnoughStamina,
 
     #endregion
 
@@ -36,8 +37,7 @@ public enum ResultCode
 
     #region Unit Error
 
-    AlreadyOwnedUnit = -5001,
-    MaxUnitStack,
+    MaxUnitStack = -5001,
     MaxLevelUnit,
     NotFoundUnit,
     NotEnoughUnitStack,

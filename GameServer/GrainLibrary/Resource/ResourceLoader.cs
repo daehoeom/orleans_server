@@ -26,6 +26,7 @@ public class ResourceLoader(ILogger<ResourceLoader> logger)
     public RItemDataSet Item { get; private set; } = null!;
     public RGachaDataSet Gacha { get; private set; } = null!;
     public RGachaUnitDataSet GachaUnit { get; private set; } = null!;
+    public RConstants Constants { get; private set; } = null!;
 
     public void LoadAll()
     {
@@ -38,6 +39,7 @@ public class ResourceLoader(ILogger<ResourceLoader> logger)
         Item = Load<RItemDataSet, RItem>(errors);
         Gacha = Load<RGachaDataSet, RGacha>(errors);
         GachaUnit = Load<RGachaUnitDataSet, RGachaUnit>(errors);
+        Constants = LoadConstants(errors);
 
         if (errors.Count > 0)
         {
@@ -102,5 +104,26 @@ public class ResourceLoader(ILogger<ResourceLoader> logger)
         logger.LogInformation($"[ResourceLoader] {tableName} 로드 완료 ({loadedRows.Count}건)");
 
         return dataSet;
+    }
+
+    private RConstants LoadConstants(List<string> errors)
+    {
+        var filePath = Path.Combine(DataRoot, "Constants.json");
+        if (!File.Exists(filePath))
+        {
+            errors.Add($"Constants: 파일을 찾을 수 없습니다. ({filePath})");
+            return new RConstants();
+        }
+
+        var constants = JsonSerializer.Deserialize<RConstants>(File.ReadAllText(filePath), SerializerOptions);
+        if (constants is null)
+        {
+            errors.Add($"Constants: JSON 파싱 결과가 비어있습니다. ({filePath})");
+            return new RConstants();
+        }
+
+        logger.LogInformation("[ResourceLoader] Constants 로드 완료");
+
+        return constants;
     }
 }

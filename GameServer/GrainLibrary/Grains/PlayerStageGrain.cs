@@ -2,6 +2,7 @@ using Database.Db;
 using Database.Db.Row;
 using GrainLibrary.Grains.Dto;
 using SharedLibrary;
+using SharedLibrary.Packet.Data;
 
 namespace GrainLibrary.Grains;
 
@@ -9,6 +10,7 @@ public interface IPlayerStageGrain : IGrainWithIntegerKey
 {
     Task<StageStateDto?> GetAsync(int stageIndex);
     Task<IReadOnlyList<StageStateDto>> GetAllAsync();
+    Task<List<StageInfo>> GetAllInfoAsync();
     Task<ResultCode> ClearStageAsync(int stageIndex, bool missionStep1, bool missionStep2, bool missionStep3, short clearScore);
 }
 
@@ -45,6 +47,20 @@ public class PlayerStageGrain(DatabaseService dbService) : Grain, IPlayerStageGr
     public Task<IReadOnlyList<StageStateDto>> GetAllAsync()
     {
         return Task.FromResult<IReadOnlyList<StageStateDto>>(_stages.Values.ToList());
+    }
+
+    public Task<List<StageInfo>> GetAllInfoAsync()
+    {
+        var result = _stages.Select(p => new StageInfo
+        {
+            StageId = p.Value.StageIndex,
+            Mission1 = p.Value.MissionStep1,
+            Mission2 = p.Value.MissionStep2,
+            Mission3 = p.Value.MissionStep3,
+            ClearScore = p.Value.ClearScore,
+        }).ToList();
+
+        return Task.FromResult(result);
     }
 
     public async Task<ResultCode> ClearStageAsync(
