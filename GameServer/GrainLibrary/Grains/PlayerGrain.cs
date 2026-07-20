@@ -12,7 +12,14 @@ public interface IPlayerGrain : IGrainWithIntegerKey
 public class PlayerGrain : Grain, IPlayerGrain
 {
     private long _playerId;
-    
+
+    public override Task OnActivateAsync(CancellationToken cancellationToken)
+    {
+        _playerId = this.GetPrimaryKeyLong();
+
+        return base.OnActivateAsync(cancellationToken);
+    }
+
     public Task<long> GetPrimaryKey()
     {
         return Task.FromResult(this.GetPrimaryKeyLong());

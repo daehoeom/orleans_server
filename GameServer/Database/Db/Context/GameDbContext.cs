@@ -13,4 +13,7 @@ public class GameDbContext(DbConnector conn)
     public PlayerLevelDbSet Level { get; private set; } = new(conn);
     public PlayerStageStateDbSet StageStates { get; private set; } = new(conn);
     public PlayerStaminaDbSet Stamina { get; private set; } = new(conn);
+    public PlayerEventAttendanceDbSet EventAttendance { get; private set; } = new(conn);
+    public PlayerEventAttendanceRewardDbSet EventAttendanceRewards { get; private set; } = new(conn);
+    public PlayerMailDbSet Mails { get; private set; } = new(conn);
 }

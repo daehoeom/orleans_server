@@ -7,13 +7,16 @@ public class Program
     {
         ["LoadPlayer"] = new LoadPlayerScenario(),
         ["ShopPurchase"] = new ShopPurchaseScenario(),
+        ["Attendance"] = new AttendanceScenario(),
+        ["Mail"] = new MailScenario(),
     };
 
     public static async Task Main(string[] args)
     {
-        const string host     = "127.0.0.1";
-        const int    port     = 35000;
-        const int    botCount = 1;
+        const string host         = "127.0.0.1";
+        const int    port         = 35000;
+        const int    botCount     = 1;
+        const string apiServerUrl = "http://localhost:5231";
 
         var scenarioName = args.Length > 0 ? args[0] : "LoadPlayer";
         if (!Scenarios.TryGetValue(scenarioName, out var scenario))
@@ -27,7 +30,7 @@ public class Program
 
         _ = Console.ReadLine();
  
-        var manager = new BotManager(host, port, scenario, botCount);
+        var manager = new BotManager(host, port, scenario, botCount, apiServerUrl);
         var results = await manager.RunAsync();
     }
 }

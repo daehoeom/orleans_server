@@ -1,18 +1,23 @@
 ﻿using System.Diagnostics;
 using System.Net;
+using System.Net.Http.Json;
 using DotNetty.Codecs;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using ScenarioBot.Scenario;
+using SharedLibrary;
+using SharedLibrary.Packet.Http;
+using SharedLibrary.Packet.Tcp;
 
 namespace ScenarioBot.Session;
 
 public record BotResult(long BotId, bool Success, TimeSpan ElapsedTime, string? Error = null);
 
-public class BotManager(string host, int port, IScenario scenario, int botCount)
+public class BotManager(string host, int port, IScenario scenario, int botCount, string apiServerUrl)
 {
     private IEventLoopGroup _eventLoopGroup = null!;
+    private readonly HttpClient _httpClient = new() { BaseAddress = new Uri(apiServerUrl) };
 
     public async Task<List<BotResult>> RunAsync()
     {
@@ -42,7 +47,22 @@ public class BotManager(string host, int port, IScenario scenario, int botCount)
 
         try
         {
+            var login = await LoginAsync(botId);
+
             var channel = await ConnectAsync(session);
+
+            await session.SendAsync(PacketHeaderType.Auth, new AuthPlayerReq
+            {
+                AccountId = login.AccountId,
+                AccessToken = login.AccessToken,
+            });
+
+            var authRes = await session.WaitForResponseAsync<AuthPlayerRes>();
+            if (authRes.ResultCode != ResultCode.Success)
+            {
+                throw new Exception($"Auth 실패: {authRes.ResultCode}");
+            }
+
             await scenario.RunAsync(session);
             await channel.CloseAsync();
 
@@ -55,6 +75,22 @@ public class BotManager(string host, int port, IScenario scenario, int botCount)
             stopWatch.Stop();
             return new BotResult(botId, false, stopWatch.Elapsed, e.Message);
         }
+    }
+
+    private async Task<LoginRes> LoginAsync(long botId)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/v2/session/login", new Login
+        {
+            GuidKey = $"bot-{botId}",
+        });
+
+        var login = await response.Content.ReadFromJsonAsync<LoginRes>();
+        if (login is null || login.ResultCode != ResultCode.Success)
+        {
+            throw new Exception($"로그인 실패: {login?.ResultCode}");
+        }
+
+        return login;
     }
 
     private Task<IChannel> ConnectAsync(BotClientSession session)

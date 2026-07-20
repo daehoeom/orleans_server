@@ -6,14 +6,14 @@ public class AccountDbSet(DbConnector conn)
 {
     public Task<AccountRow?> GetAsync(string guid)
     {
-        var sql = @"SELECT * FROM `accounts` WHERE `guid` = @guid";
+        var query = @"SELECT * FROM `accounts` WHERE `guid` = @guid";
 
         var param = new
         {
             guid,
         };
 
-        return conn.QueryFirstOrDefaultAsync<AccountRow>(sql, param);
+        return conn.QueryFirstOrDefaultAsync<AccountRow>(query, param);
     }
 
     public Task<int> InsertAsync(AccountRow row)

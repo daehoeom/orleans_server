@@ -27,11 +27,15 @@ public class Program
                 services.AddSingleton<ResourceLoader>();
  
                 // 패킷 컨트롤러 (역할별로 추가)
+                services.AddSingleton<PlayerBaseController, AuthController>();
                 services.AddSingleton<PlayerBaseController, PlayerController>();
                 services.AddSingleton<PlayerBaseController, ShopController>();
                 services.AddSingleton<PlayerBaseController, CommunityController>();
                 services.AddSingleton<PlayerBaseController, GachaController>();
- 
+                services.AddSingleton<PlayerBaseController, StageController>();
+                services.AddSingleton<PlayerBaseController, AttendanceController>();
+                services.AddSingleton<PlayerBaseController, MailController>();
+
                 // 패킷 디스패처 & DotNetty 핸들러
                 services.AddSingleton<PacketHandler>();
                 services.AddSingleton<GameServerHandler>();

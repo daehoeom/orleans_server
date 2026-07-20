@@ -6,14 +6,14 @@ public class PlayerDbSet(DbConnector conn)
 {
     public Task<PlayerRow?> GetAsync(long player_id)
     {
-        var sql = @"SELECT * FROM `players` 
+        var query = @"SELECT * FROM `players` 
                     WHERE `player_id` = @player_id";
 
         var param = new
         {
             player_id
         };
-        return conn.QueryFirstOrDefaultAsync<PlayerRow>(sql, param);
+        return conn.QueryFirstOrDefaultAsync<PlayerRow>(query, param);
     }
 
     public Task<int> InsertAsync(PlayerRow row)
@@ -27,7 +27,7 @@ public class PlayerDbSet(DbConnector conn)
     public async Task<int> UpdateNickNameAsync(long player_id, string changeName)
     {
         var now = DateTime.UtcNow;
-        var sql = $@"UPDATE `players` SET `player_name` = @changeName, `updated_at` = @now
+        var query = $@"UPDATE `players` SET `player_name` = @changeName, `updated_at` = @now
                     WHERE id = @player_id";
 
         var param = new
@@ -37,18 +37,18 @@ public class PlayerDbSet(DbConnector conn)
             player_id,
         };
 
-        return await conn.ExecuteAsync(sql, param);
+        return await conn.ExecuteAsync(query, param);
     }
 
     public async Task<int> DeleteAsync(long player_id)
     {
-        var sql = @"DELETE FROM `players` WHERE id = @player_id";
+        var query = @"DELETE FROM `players` WHERE id = @player_id";
 
         var param = new
         {
             player_id,
         };
 
-        return await conn.ExecuteAsync(sql, param);
+        return await conn.ExecuteAsync(query, param);
     }
 }

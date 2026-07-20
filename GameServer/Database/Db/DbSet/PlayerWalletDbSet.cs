@@ -7,7 +7,7 @@ public class PlayerWalletDbSet(DbConnector conn)
 {
     public async Task<PlayerWalletRow?> GetAsync(long player_id, int monetary_type)
     {
-        var sql = @"SELECT * FROM `player_wallets`
+        var query = @"SELECT * FROM `player_wallets`
                     WHERE `player_id` = @player_id AND `monetary_type` = @monetary_type";
         var param = new
         {
@@ -15,7 +15,7 @@ public class PlayerWalletDbSet(DbConnector conn)
             monetary_type,
         };
 
-        return await conn.QueryFirstOrDefaultAsync<PlayerWalletRow>(sql, param);
+        return await conn.QueryFirstOrDefaultAsync<PlayerWalletRow>(query, param);
     }
 
     public async Task<PlayerWalletRow?> GetAsync(long player_id, CurrencyType monetary_type)
@@ -25,7 +25,7 @@ public class PlayerWalletDbSet(DbConnector conn)
 
     public async Task<IEnumerable<PlayerWalletRow>> GetsAsync(long player_id)
     {
-        var sql = @"SELECT * FROM `player_wallets`
+        var query = @"SELECT * FROM `player_wallets`
                     WHERE `player_id` = @player_id";
 
         var param = new
@@ -33,7 +33,7 @@ public class PlayerWalletDbSet(DbConnector conn)
             player_id,
         };
 
-        return await conn.QueryAsync<PlayerWalletRow>(sql, param);
+        return await conn.QueryAsync<PlayerWalletRow>(query, param);
     }
 
     public async Task<int> InsertAsync(PlayerWalletRow walletRow)
@@ -46,7 +46,7 @@ public class PlayerWalletDbSet(DbConnector conn)
 
     public async Task<int> AddAsync(long player_id, int monetary_type, long addValue)
     {
-        var sql = @"UPDATE `player_wallets` SET `amount` = `amount` +  @addValue
+        var query = @"UPDATE `player_wallets` SET `amount` = `amount` +  @addValue
                 WHERE `player_id` = @player_id AND `monetary_type` = @monetary_type";
 
         var param = new
@@ -56,12 +56,12 @@ public class PlayerWalletDbSet(DbConnector conn)
             addValue
         };
 
-        return await conn.ExecuteAsync(sql, param);
+        return await conn.ExecuteAsync(query, param);
     }
 
     public async Task<int> SpendAsync(long player_id, int monetary_type, long spendValue)
     {
-        var sql = @"UPDATE `player_wallets` SET `amount` = `amount` - @spendValue
+        var query = @"UPDATE `player_wallets` SET `amount` = `amount` - @spendValue
                 WHERE `player_id` = @player_id AND `monetary_type` = @monetary_type";
 
         var param = new
@@ -71,12 +71,12 @@ public class PlayerWalletDbSet(DbConnector conn)
             spendValue,
         };
 
-        return await conn.ExecuteAsync(sql, param);
+        return await conn.ExecuteAsync(query, param);
     }
 
     public async Task<int> UpdateAsync(long player_id, int monetary_type, long updateValue)
     {
-        var sql = @"UPDATE `player_wallets` SET `amount` = @updateValue
+        var query = @"UPDATE `player_wallets` SET `amount` = @updateValue
                 WHERE `player_id` = @player_id AND `monetary_type` = @monetary_type";
 
         var param = new
@@ -86,6 +86,6 @@ public class PlayerWalletDbSet(DbConnector conn)
             updateValue,
         };
 
-        return await conn.ExecuteAsync(sql, param);
+        return await conn.ExecuteAsync(query, param);
     }
 }

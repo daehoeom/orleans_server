@@ -26,6 +26,8 @@ public class ResourceLoader(ILogger<ResourceLoader> logger)
     public RItemDataSet Item { get; private set; } = null!;
     public RGachaDataSet Gacha { get; private set; } = null!;
     public RGachaUnitDataSet GachaUnit { get; private set; } = null!;
+    public RStageDataSet Stage { get; private set; } = null!;
+    public RAttendanceRewardDataSet AttendanceReward { get; private set; } = null!;
     public RConstants Constants { get; private set; } = null!;
 
     public void LoadAll()
@@ -39,6 +41,8 @@ public class ResourceLoader(ILogger<ResourceLoader> logger)
         Item = Load<RItemDataSet, RItem>(errors);
         Gacha = Load<RGachaDataSet, RGacha>(errors);
         GachaUnit = Load<RGachaUnitDataSet, RGachaUnit>(errors);
+        Stage = Load<RStageDataSet, RStage>(errors);
+        AttendanceReward = Load<RAttendanceRewardDataSet, RAttendanceReward>(errors);
         Constants = LoadConstants(errors);
 
         if (errors.Count > 0)

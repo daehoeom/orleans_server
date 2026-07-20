@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using System.Collections.Generic;
+using MessagePack;
 using SharedLibrary.Packet.Base;
 using SharedLibrary.Packet.Data;
 
@@ -27,6 +28,9 @@ namespace SharedLibrary.Packet.Tcp
         
         [Key(4)]
         public StaminaInfo StaminaInfo { get; set; } = new StaminaInfo();
+        
+        [Key(5)]
+        public List<ItemInfo> ItemInfo { get; set; } = new List<ItemInfo>();
     }
 }
 

@@ -1,0 +1,65 @@
+[
+  {
+    "RewardId": 1,
+    "EventId": 1,
+    "Day": 1,
+    "RewardCurrencyType": "Gold",
+    "RewardCurrencyAmount": 100,
+    "RewardItemId": 0,
+    "RewardItemCount": 0
+  },
+  {
+    "RewardId": 2,
+    "EventId": 1,
+    "Day": 2,
+    "RewardCurrencyType": "Gold",
+    "RewardCurrencyAmount": 150,
+    "RewardItemId": 0,
+    "RewardItemCount": 0
+  },
+  {
+    "RewardId": 3,
+    "EventId": 1,
+    "Day": 3,
+    "RewardCurrencyType": "FreeClover",
+    "RewardCurrencyAmount": 10,
+    "RewardItemId": 0,
+    "RewardItemCount": 0
+  },
+  {
+    "RewardId": 4,
+    "EventId": 1,
+    "Day": 4,
+    "RewardCurrencyType": "Gold",
+    "RewardCurrencyAmount": 200,
+    "RewardItemId": 0,
+    "RewardItemCount": 0
+  },
+  {
+    "RewardId": 5,
+    "EventId": 1,
+    "Day": 5,
+    "RewardCurrencyType": "GachaTicket",
+    "RewardCurrencyAmount": 1,
+    "RewardItemId": 0,
+    "RewardItemCount": 0
+  },
+  {
+    "RewardId": 6,
+    "EventId": 1,
+    "Day": 6,
+    "RewardCurrencyType": "Gold",
+    "RewardCurrencyAmount": 300,
+    "RewardItemId": 0,
+    "RewardItemCount": 0
+  },
+  {
+    "RewardId": 7,
+    "EventId": 1,
+    "Day": 7,
+    "RewardCurrencyType": "None",
+    "RewardCurrencyAmount": 0,
+    "RewardItemId": 1001,
+    "RewardItemCount": 1
+  }
+]

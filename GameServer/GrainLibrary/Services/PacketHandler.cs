@@ -69,7 +69,13 @@ public class PacketHandler
             await context.CloseAsync();
             return;
         }
-        
+
+        if (!session.IsAuthenticated && stream.HeaderType is not (PacketHeaderType.Auth or PacketHeaderType.KeepAlive))
+        {
+            _logger.LogWarning($"[PacketHandler] 인증되지 않은 세션의 패킷 거부: {stream.HeaderType}");
+            return;
+        }
+
         if (!_handlers.TryGetValue(stream.HeaderType, out var router))
         {
             _logger.LogError($"[PacketHandler] 미등록 HeaderType: {stream.HeaderType}");

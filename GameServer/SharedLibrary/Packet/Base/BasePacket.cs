@@ -20,7 +20,7 @@ namespace SharedLibrary.Packet.Base
         public ResultCode ResultCode { get; set; }
         
         [Key(3)]
-        public required T Stream { get; init; }
+        public T Stream { get; init; } = default!;
     }
 
     [MessagePackObject]
@@ -30,7 +30,7 @@ namespace SharedLibrary.Packet.Base
         public PacketHeaderType HeaderType { get; set; }
         
         [Key(1)]
-        public required T Stream { get; init; }
+        public T Stream { get; init; } = default!;
     }   
 }
 

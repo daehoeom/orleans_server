@@ -1,0 +1,23 @@
+[
+  {
+    "StageId": 1,
+    "StaminaCost": 5,
+    "RewardExp": 10,
+    "RewardCurrencyType": "Gold",
+    "RewardCurrencyAmount": 100
+  },
+  {
+    "StageId": 2,
+    "StaminaCost": 5,
+    "RewardExp": 15,
+    "RewardCurrencyType": "Gold",
+    "RewardCurrencyAmount": 150
+  },
+  {
+    "StageId": 3,
+    "StaminaCost": 10,
+    "RewardExp": 20,
+    "RewardCurrencyType": "Gold",
+    "RewardCurrencyAmount": 200
+  }
+]

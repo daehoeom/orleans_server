@@ -6,7 +6,7 @@ public class PlayerStageStateDbSet(DbConnector conn)
 {
     public async Task<PlayerStageStateRow?> GetAsync(long player_id, int stage_index)
     {
-        var sql = @"SELECT * FROM `player_stage_states`
+        var query = @"SELECT * FROM `player_stage_states`
                 WHERE `player_id` = @player_id AND `stage_index` = @stage_index";
 
         var param = new
@@ -15,12 +15,12 @@ public class PlayerStageStateDbSet(DbConnector conn)
             stage_index,
         };
 
-        return await conn.QueryFirstOrDefaultAsync<PlayerStageStateRow>(sql, param);
+        return await conn.QueryFirstOrDefaultAsync<PlayerStageStateRow>(query, param);
     }
 
     public async Task<IEnumerable<PlayerStageStateRow>> GetsAsync(long player_id)
     {
-        var sql = @"SELECT * FROM `player_stage_states`
+        var query = @"SELECT * FROM `player_stage_states`
                 WHERE `player_id` = @player_id";
 
         var param = new
@@ -28,7 +28,7 @@ public class PlayerStageStateDbSet(DbConnector conn)
             player_id,
         };
 
-        return await conn.QueryAsync<PlayerStageStateRow>(sql, param);
+        return await conn.QueryAsync<PlayerStageStateRow>(query, param);
     }
 
     public async Task<int> InsertAsync(PlayerStageStateRow row)
@@ -47,7 +47,7 @@ public class PlayerStageStateDbSet(DbConnector conn)
         bool mission_step_3,
         short clear_score)
     {
-        var sql = @"UPDATE `player_stage_states` SET
+        var query = @"UPDATE `player_stage_states` SET
                 `mission_step_1` = @mission_step_1,
                 `mission_step_2` = @mission_step_2,
                 `mission_step_3` = @mission_step_3,
@@ -66,6 +66,6 @@ public class PlayerStageStateDbSet(DbConnector conn)
             updated_at = DateTime.UtcNow,
         };
 
-        return await conn.ExecuteAsync(sql, param);
+        return await conn.ExecuteAsync(query, param);
     }
 }

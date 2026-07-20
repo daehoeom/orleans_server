@@ -1,53 +1,87 @@
-namespace SharedLibrary;
-
-public enum ResultCode
+namespace SharedLibrary
 {
-    Success = 0,
+    public enum ResultCode
+    {
+        Success = 0,
 
-    #region System Error
+        #region System Error
 
-    InternalServeError = -1000,
-    NotFoundResource,
-    InvalidParameter,
-    DbInsertError,
-    DbUpdateError,
+        InternalServeError = -1000,
+        NotFoundResource,
+        InvalidParameter,
+        DbInsertError,
+        DbUpdateError,
 
-    #endregion
+        #endregion
 
-    #region Player Error
+        #region Player Error
 
-    PlayerNotFound = -2001,
-    NotEnoughStamina,
+        PlayerNotFound = -2001,
+        NotEnoughStamina,
 
-    #endregion
+        #endregion
 
-    #region Shop Error
+        #region Shop Error
 
-    NotEnoughCurrency = -3001,
-    PurchaseLimitExceeded,
-    ProductNotFound,
+        NotEnoughCurrency = -3001,
+        PurchaseLimitExceeded,
+        ProductNotFound,
 
-    #endregion
+        #endregion
 
-    #region Inventory Error
+        #region Inventory Error
 
-    NotEnoughItemCount = -4001,
+        NotEnoughItemCount = -4001,
 
-    #endregion
+        #endregion
 
-    #region Unit Error
+        #region Unit Error
 
-    MaxUnitStack = -5001,
-    MaxLevelUnit,
-    NotFoundUnit,
-    NotEnoughUnitStack,
+        MaxUnitStack = -5001,
+        MaxLevelUnit,
+        NotFoundUnit,
+        NotEnoughUnitStack,
 
-    #endregion
+        #endregion
 
-    #region Gacha Error
+        #region Gacha Error
 
-    GachaNotFound = -6001,
-    GachaPoolEmpty,
+        GachaNotFound = -6001,
+        GachaPoolEmpty,
 
-    #endregion
+        #endregion
+
+        #region Stage Error
+
+        StageNotFound = -7001,
+        StageLocked,
+
+        #endregion
+
+        #region Event Error
+
+        AttendanceEventNotFound = -8001,
+        AttendanceEventEnded,
+        AlreadyCheckedToday,
+        NotCheckedYet,
+        AlreadyClaimed,
+        AttendanceRewardNotFound,
+
+        #endregion
+
+        #region Mail Error
+
+        MailNotFound = -9001,
+        MailExpired,
+        MailAlreadyClaimed,
+        MailRewardNotClaimed,
+
+        #endregion
+
+        #region Auth Error
+
+        AuthTokenInvalid = -10001,
+
+        #endregion
+    }    
 }

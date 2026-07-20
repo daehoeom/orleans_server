@@ -1,4 +1,6 @@
-﻿namespace SharedLibrary.Packet.Base
+﻿using System;
+
+namespace SharedLibrary.Packet.Base
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class PacketHandlerAttribute : Attribute

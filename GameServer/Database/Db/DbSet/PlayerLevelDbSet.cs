@@ -6,7 +6,7 @@ public class PlayerLevelDbSet(DbConnector conn)
 {
     public async Task<PlayerLevelRow?> GetAsync(long player_id)
     {
-        var sql = @"SELECT * FROM `player_levels`
+        var query = @"SELECT * FROM `player_levels`
                 WHERE `player_id` = @player_id";
 
         var param = new
@@ -14,7 +14,7 @@ public class PlayerLevelDbSet(DbConnector conn)
             player_id,
         };
 
-        return await conn.QueryFirstOrDefaultAsync<PlayerLevelRow>(sql, param);
+        return await conn.QueryFirstOrDefaultAsync<PlayerLevelRow>(query, param);
     }
 
     public async Task<int> InsertAsync(PlayerLevelRow row)
@@ -27,7 +27,7 @@ public class PlayerLevelDbSet(DbConnector conn)
 
     public async Task<int> UpdateLevelAsync(long player_id, int level, long exp)
     {
-        var sql = @"UPDATE `player_levels` SET `level` = @level, `exp` = @exp, `updated_at` = @updated_at
+        var query = @"UPDATE `player_levels` SET `level` = @level, `exp` = @exp, `updated_at` = @updated_at
                 WHERE `player_id` = @player_id";
 
         var param = new
@@ -38,6 +38,6 @@ public class PlayerLevelDbSet(DbConnector conn)
             updated_at = DateTime.UtcNow,
         };
 
-        return await conn.ExecuteAsync(sql, param);
+        return await conn.ExecuteAsync(query, param);
     }
 }

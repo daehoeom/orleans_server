@@ -6,7 +6,7 @@ public class PlayerStaminaDbSet(DbConnector conn)
 {
     public async Task<PlayerStaminaRow?> GetAsync(long player_id)
     {
-        var sql = @"SELECT * FROM `player_stamina`
+        var query = @"SELECT * FROM `player_stamina`
                 WHERE `player_id` = @player_id";
 
         var param = new
@@ -14,7 +14,7 @@ public class PlayerStaminaDbSet(DbConnector conn)
             player_id,
         };
 
-        return await conn.QueryFirstOrDefaultAsync<PlayerStaminaRow>(sql, param);
+        return await conn.QueryFirstOrDefaultAsync<PlayerStaminaRow>(query, param);
     }
 
     public async Task<int> InsertAsync(PlayerStaminaRow row)
@@ -27,7 +27,7 @@ public class PlayerStaminaDbSet(DbConnector conn)
 
     public async Task<int> UpdateAsync(long player_id, int amount, DateTime last_updated_at)
     {
-        var sql = @"UPDATE `player_stamina` SET `amount` = @amount, `last_updated_at` = @last_updated_at
+        var query = @"UPDATE `player_stamina` SET `amount` = @amount, `last_updated_at` = @last_updated_at
                 WHERE `player_id` = @player_id";
 
         var param = new
@@ -37,6 +37,6 @@ public class PlayerStaminaDbSet(DbConnector conn)
             last_updated_at,
         };
 
-        return await conn.ExecuteAsync(sql, param);
+        return await conn.ExecuteAsync(query, param);
     }
 }

@@ -13,11 +13,19 @@ public class PlayerSession : IDisposable
     
     public IChannelHandlerContext Channel { get; init; }
     public long SessionId => _sessionId;
+    public bool IsAuthenticated { get; private set; }
 
     public PlayerSession CreateSession(long sessionId)
     {
         _sessionId = sessionId;
         return this;
+    }
+
+    public void CompleteAuth(long playerId)
+    {
+        CreateSession(playerId);
+        IsAuthenticated = true;
+        _authTimeoutCts.Cancel();
     }
 
     public void StartAuthTimeout(TimeSpan timeout)

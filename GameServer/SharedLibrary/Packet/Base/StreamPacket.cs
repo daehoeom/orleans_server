@@ -1,7 +1,10 @@
-﻿namespace SharedLibrary.Packet.Base;
+﻿using System;
 
-public sealed record StreamPacket
+namespace SharedLibrary.Packet.Base
 {
-    public PacketHeaderType HeaderType { get; init; }
-    public ReadOnlyMemory<byte> Body { get; init; }
+    public sealed record StreamPacket
+    {
+        public PacketHeaderType HeaderType { get; set; }
+        public ReadOnlyMemory<byte> Body { get; set; }
+    }
 }

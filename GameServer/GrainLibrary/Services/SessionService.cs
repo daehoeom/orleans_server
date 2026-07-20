@@ -25,27 +25,9 @@ public class SessionService(ILogger<SessionService> logger)
         return _sessions.Values.ToList();
     }
 
-    public PlayerSession? AddSession(IChannelHandlerContext context, long sessionId)
+    public PlayerSession? AddSession(PlayerSession session)
     {
-        if (_sessions.ContainsKey(sessionId))
-        {
-            return null;
-        }
-        
-        if (!_contextSessions.TryGetValue(context, out var contextSession))
-        {
-            return null;
-        }
-        
-        // 세션 정보 설정
-
-        if (!_sessions.TryAdd(sessionId, contextSession))
-        {
-            return null;
-        }
-        
-        logger.LogError($"Failed to add session in session service.");
-        return contextSession;
+        return _sessions.TryAdd(session.SessionId, session) ? session : null;
     }
 
     public PlayerSession? AddContext(IChannelHandlerContext context)
@@ -71,10 +53,7 @@ public class SessionService(ILogger<SessionService> logger)
             return false;
         }
 
-        if (!_sessions.TryRemove(session.SessionId, out _))
-        {
-            return false;
-        }
+        _sessions.TryRemove(session.SessionId, out _);
 
         session.Dispose();
         return true;
