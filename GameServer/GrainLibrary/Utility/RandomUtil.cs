@@ -91,4 +91,15 @@ public static class RandomUtil
 
         return source[^1].Value;
     }
+
+    public static T GetPickOne<T>(List<T> source)
+    {
+        if (source is not { Count: > 0 })
+        {
+            throw new ArgumentException("Empty random source.");
+        }
+
+        var randomNum = Next(0, source.Count);
+        return source[randomNum];
+    }
 }

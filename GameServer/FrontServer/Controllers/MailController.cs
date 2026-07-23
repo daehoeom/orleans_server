@@ -38,24 +38,6 @@ public class MailController(IClusterClient clusterClient)
         await SendAsync(player, response: new ReadMailRes
         {
             MailInfo = result.MailInfo!,
-        });
-    }
-
-    [PacketHandler(PacketHeaderType.ClaimMail)]
-    public async Task ClaimMailAsync(PlayerSession player, ClaimMailReq req)
-    {
-        var mailGrain = _clusterClient.GetGrain<IPlayerMailGrain>(player.SessionId);
-
-        var result = await mailGrain.ClaimAsync(req.Id);
-        if (result.ResultCode != ResultCode.Success)
-        {
-            await SendAsync<ClaimMailRes>(player, result.ResultCode);
-            return;
-        }
-
-        await SendAsync(player, response: new ClaimMailRes
-        {
-            MailInfo = result.MailInfo!,
             WalletInfo = result.WalletInfo,
         });
     }

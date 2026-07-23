@@ -33,7 +33,6 @@
         // Mail
         LoadMail = 7000,
         ReadMail = 7001,
-        ClaimMail = 7002,
         DeleteMail = 7003,
     }    
 }

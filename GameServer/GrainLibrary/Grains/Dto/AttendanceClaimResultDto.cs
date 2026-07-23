@@ -20,4 +20,6 @@ public class AttendanceClaimResultDto
     public int RewardItemCount { get; set; }
 
     public List<WalletInfo> WalletInfo { get; set; } = new();
+
+    public RewardGrantResult RewardGrant { get; set; } = new();
 }

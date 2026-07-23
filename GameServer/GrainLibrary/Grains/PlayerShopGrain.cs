@@ -80,9 +80,9 @@ public class PlayerShopGrain(DatabaseService dbService, ResourceLoader resourceL
             
             var inventoryGrain = GrainFactory.GetGrain<IPlayerInventoryGrain>(playerId);
             var addResult = await inventoryGrain.AddAsync(rProduct.RewardItemId, rProduct.RewardItemCount);
-            if (addResult != ResultCode.Success)
+            if (addResult.ResultCode != ResultCode.Success)
             {
-                return addResult;
+                return addResult.ResultCode;
             }
         }
         catch
@@ -112,9 +112,9 @@ public class PlayerShopGrain(DatabaseService dbService, ResourceLoader resourceL
 
         var inventoryGrain = GrainFactory.GetGrain<IPlayerInventoryGrain>(playerId);
         var addResult = await inventoryGrain.AddAsync(rProduct.RewardItemId, rProduct.RewardItemCount);
-        if (addResult != ResultCode.Success)
+        if (addResult.ResultCode != ResultCode.Success)
         {
-            return addResult;
+            return addResult.ResultCode;
         }
 
         return ResultCode.Success;

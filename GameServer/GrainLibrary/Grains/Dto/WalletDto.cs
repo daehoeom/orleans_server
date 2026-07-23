@@ -8,3 +8,11 @@ public class WalletDto
 
     public long Amount { get; set; }
 }
+
+public class WalletAddResult
+{
+    public long Requested;
+    public long Granted;
+    public long NewBalance;
+    public ResultCode ResultCode;
+}

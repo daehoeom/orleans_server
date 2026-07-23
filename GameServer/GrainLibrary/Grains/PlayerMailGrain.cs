@@ -11,7 +11,6 @@ public interface IPlayerMailGrain : IGrainWithIntegerKey
 {
     Task<List<MailInfo>> GetAllAsync();
     Task<MailReadResultDto> ReadAsync(long id);
-    Task<MailClaimResultDto> ClaimAsync(long id);
     Task<ResultCode> DeleteAsync(long id);
     Task<ResultCode> DeleteAllAsync();
 }
@@ -53,6 +52,7 @@ public class PlayerMailGrain(DatabaseService dbService) : Grain, IPlayerMailGrai
         return Task.FromResult(result);
     }
 
+    // 메일에 보상이 남아있으면 '읽음'은 곧 '수령'을 의미한다 - 보상이 없으면 단순 읽음 처리만 한다.
     public async Task<MailReadResultDto> ReadAsync(long id)
     {
         if (!_mails.TryGetValue(id, out var mail))
@@ -60,53 +60,37 @@ public class PlayerMailGrain(DatabaseService dbService) : Grain, IPlayerMailGrai
             return new MailReadResultDto { ResultCode = ResultCode.MailNotFound };
         }
 
-        var affectedRow = await dbService.Game.Mails.UpdateReadAsync(PlayerId, id);
-        if (affectedRow <= 0)
-        {
-            return new MailReadResultDto { ResultCode = ResultCode.DbUpdateError };
-        }
-
-        mail.IsRead = true;
-
-        return new MailReadResultDto
-        {
-            ResultCode = ResultCode.Success,
-            MailInfo = mail,
-        };
-    }
-
-    public async Task<MailClaimResultDto> ClaimAsync(long id)
-    {
-        if (!_mails.TryGetValue(id, out var mail))
-        {
-            return new MailClaimResultDto { ResultCode = ResultCode.MailNotFound };
-        }
-
         if (mail.Rewards.Count == 0)
         {
-            return new MailClaimResultDto { ResultCode = ResultCode.MailAlreadyClaimed };
+            if (!mail.IsRead)
+            {
+                var affectedRow = await dbService.Game.Mails.UpdateReadAsync(PlayerId, id);
+                if (affectedRow <= 0)
+                {
+                    return new MailReadResultDto { ResultCode = ResultCode.DbUpdateError };
+                }
+
+                mail.IsRead = true;
+            }
+
+            return new MailReadResultDto
+            {
+                ResultCode = ResultCode.Success,
+                MailInfo = mail,
+            };
         }
 
         var walletGrain = GrainFactory.GetGrain<IPlayerWalletGrain>(PlayerId);
-        var inventoryGrain = GrainFactory.GetGrain<IPlayerInventoryGrain>(PlayerId);
 
-        foreach (var reward in mail.Rewards)
+        var rewardGrant = await RewardHelper.GrantAsync(
+            GrainFactory, PlayerId,
+            mail.Rewards.Select(reward => (reward.CurrencyType, reward.CurrencyAmount)),
+            mail.Rewards.Select(reward => (reward.ItemId, reward.ItemCount)));
+
+        var rewardAffectedRow = await dbService.Game.Mails.UpdateRewardsAsync(PlayerId, id, JsonSerializer.Serialize(EmptyRewards));
+        if (rewardAffectedRow <= 0)
         {
-            if (reward.CurrencyType != CurrencyType.None && reward.CurrencyAmount > 0)
-            {
-                await walletGrain.AddAsync(reward.CurrencyType, reward.CurrencyAmount);
-            }
-
-            if (reward.ItemId > 0 && reward.ItemCount > 0)
-            {
-                await inventoryGrain.AddAsync(reward.ItemId, reward.ItemCount);
-            }
-        }
-
-        var affectedRow = await dbService.Game.Mails.UpdateRewardsAsync(PlayerId, id, JsonSerializer.Serialize(EmptyRewards));
-        if (affectedRow <= 0)
-        {
-            return new MailClaimResultDto { ResultCode = ResultCode.DbUpdateError };
+            return new MailReadResultDto { ResultCode = ResultCode.DbUpdateError };
         }
 
         var grantedRewards = mail.Rewards;
@@ -114,7 +98,7 @@ public class PlayerMailGrain(DatabaseService dbService) : Grain, IPlayerMailGrai
         mail.Rewards = new List<MailRewardEntry>();
         mail.IsRead = true;
 
-        return new MailClaimResultDto
+        return new MailReadResultDto
         {
             ResultCode = ResultCode.Success,
             MailInfo = new MailInfo
@@ -129,6 +113,7 @@ public class PlayerMailGrain(DatabaseService dbService) : Grain, IPlayerMailGrai
                 ExpiredAt = mail.ExpiredAt,
             },
             WalletInfo = await walletGrain.GetAllBalanceAsync(),
+            RewardGrant = rewardGrant,
         };
     }
 

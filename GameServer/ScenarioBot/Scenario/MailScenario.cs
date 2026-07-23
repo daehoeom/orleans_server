@@ -40,15 +40,7 @@ public class MailScenario : IScenario
 
         if (mail.Rewards.Count > 0)
         {
-            await session.SendAsync(PacketHeaderType.ClaimMail, new ClaimMailReq { Id = mail.Id });
-
-            var claimRes = await session.WaitForResponseAsync<ClaimMailRes>();
-            if (claimRes.ResultCode != ResultCode.Success)
-            {
-                throw new Exception($"[{Name}] ClaimMail 실패: {claimRes.ResultCode}");
-            }
-
-            Console.WriteLine($"[{Name}] 보상 수령 완료: Id={claimRes.Stream.MailInfo.Id}");
+            Console.WriteLine($"[{Name}] 보상 수령 완료 (읽음과 동시 처리): Id={readRes.Stream.MailInfo.Id}");
         }
 
         await session.SendAsync(PacketHeaderType.DeleteMail, new DeleteMailReq { Id = mail.Id });

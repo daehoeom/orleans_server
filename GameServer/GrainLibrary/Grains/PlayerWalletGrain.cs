@@ -10,7 +10,7 @@ public interface IPlayerWalletGrain : IGrainWithIntegerKey
     Task<long> GetBalanceAsync(CurrencyType currencyType);
     Task<List<WalletInfo>> GetAllBalanceAsync();
     Task<ResultCode> SpendAsync(CurrencyType currencyType, long amount);
-    Task<long> AddAsync(CurrencyType currencyType, long amount);
+    Task<WalletAddResult> AddAsync(CurrencyType currencyType, long amount);
     Task<ResultCode> IsEnoughAsync(CurrencyType currencyType, long amount);
 }
 
@@ -61,29 +61,37 @@ public class PlayerWalletGrain(DatabaseService dbService) : Grain, IPlayerWallet
             return ResultCode.NotEnoughCurrency;
         }
 
-        await dbService.Game.Wallets.SpendAsync(PlayerId, (int)currencyType, amount);
+        var affectedRow = await dbService.Game.Wallets.SpendAsync(PlayerId, (int)currencyType, amount);
+        if (affectedRow <= 0)
+        {
+            return ResultCode.DbUpdateError;
+        }
 
         SetBalance(currencyType, balance - amount);
 
         return ResultCode.Success;
     }
 
-    public async Task<long> AddAsync(CurrencyType currencyType, long amount)
+    public async Task<WalletAddResult> AddAsync(CurrencyType currencyType, long amount)
     {
         var balance = _wallets.GetValueOrDefault(currencyType)?.Amount ?? 0;
 
         var addAmount = Math.Min(amount, SharedConstant.MAX_CURRENCY_AMOUNT - balance);
         if (addAmount <= 0)
         {
-            return balance;
+            return new WalletAddResult { Requested = amount, Granted = 0, NewBalance = balance, ResultCode = ResultCode.Success };
         }
 
-        await dbService.Game.Wallets.AddAsync(PlayerId, (int)currencyType, addAmount);
+        var affectedRow = await dbService.Game.Wallets.AddAsync(PlayerId, (int)currencyType, addAmount);
+        if (affectedRow <= 0)
+        {
+            return new WalletAddResult { Requested = amount, Granted = 0, NewBalance = balance, ResultCode = ResultCode.DbUpdateError };
+        }
 
         balance += addAmount;
         SetBalance(currencyType, balance);
 
-        return balance;
+        return new WalletAddResult { Requested = amount, Granted = addAmount, NewBalance = balance, ResultCode = ResultCode.Success };
     }
 
     public Task<ResultCode> IsEnoughAsync(CurrencyType currencyType, long amount)

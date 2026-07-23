@@ -14,4 +14,6 @@ public class StageClearResultDto
     public int Level { get; set; }
 
     public long Exp { get; set; }
+
+    public RewardGrantResult RewardGrant { get; set; } = new();
 }

@@ -1,6 +1,7 @@
 using Database.Db;
 using Database.Db.Row;
 using GrainLibrary.Grains.Dto;
+using GrainLibrary.Resource;
 using SharedLibrary;
 
 namespace GrainLibrary.Grains;
@@ -9,11 +10,12 @@ public interface IPlayerInventoryGrain : IGrainWithIntegerKey
 {
     Task<int> GetCountAsync(int itemId);
     Task<IReadOnlyList<InventoryDto>> GetAllAsync();
-    Task<ResultCode> AddAsync(int itemId, int count);
+    Task<ItemAddResult> AddAsync(int itemId, int count);
     Task<ResultCode> SpendAsync(int itemId, int count);
 }
 
-public class PlayerInventoryGrain(DatabaseService dbService) : Grain, IPlayerInventoryGrain
+public class PlayerInventoryGrain(DatabaseService dbService, ResourceLoader resourceLoader) 
+    : Grain, IPlayerInventoryGrain
 {
     private long PlayerId => this.GetPrimaryKeyLong();
 
@@ -44,44 +46,52 @@ public class PlayerInventoryGrain(DatabaseService dbService) : Grain, IPlayerInv
         return Task.FromResult<IReadOnlyList<InventoryDto>>(_items.Values.ToList());
     }
 
-    public async Task<ResultCode> AddAsync(int itemId, int count)
+    public async Task<ItemAddResult> AddAsync(int itemId, int count)
     {
         if (count <= 0)
         {
-            return ResultCode.InvalidParameter;
+            return new ItemAddResult { Requested = count, ResultCode = ResultCode.InvalidParameter };
+        }
+
+        var currentCount = _items.GetValueOrDefault(itemId)?.Count ?? 0;
+
+        var rItem = resourceLoader.Item.Find(itemId);
+        var maxStack = rItem?.MaxStack ?? 0;
+        var room = maxStack > 0 ? maxStack - currentCount : count;
+        var addCount = Math.Max(0, Math.Min(count, room));
+
+        if (addCount == 0)
+        {
+            return new ItemAddResult { Requested = count, Granted = 0, NewCount = currentCount, ResultCode = ResultCode.Success };
         }
 
         if (_items.TryGetValue(itemId, out var item))
         {
-            var affectedRow = await dbService.Game.Inventory.AddAsync(PlayerId, itemId, count);
+            var affectedRow = await dbService.Game.Inventory.AddAsync(PlayerId, itemId, addCount);
             if (affectedRow <= 0)
             {
-                return ResultCode.DbUpdateError;
+                return new ItemAddResult { Requested = count, ResultCode = ResultCode.DbUpdateError };
             }
 
-            item.Count += count;
+            item.Count += addCount;
 
-            return ResultCode.Success;
+            return new ItemAddResult { Requested = count, Granted = addCount, NewCount = item.Count, ResultCode = ResultCode.Success };
         }
 
         var insertedRow = await dbService.Game.Inventory.InsertAsync(new PlayerInventoryRow
         {
             player_id = PlayerId,
             item_id = itemId,
-            count = count,
+            count = addCount,
         });
         if (insertedRow <= 0)
         {
-            return ResultCode.DbInsertError;
+            return new ItemAddResult { Requested = count, ResultCode = ResultCode.DbInsertError };
         }
 
-        _items[itemId] = new InventoryDto
-        {
-            ItemId = itemId,
-            Count = count,
-        };
+        _items[itemId] = new InventoryDto { ItemId = itemId, Count = addCount };
 
-        return ResultCode.Success;
+        return new ItemAddResult { Requested = count, Granted = addCount, NewCount = addCount, ResultCode = ResultCode.Success };
     }
 
     public async Task<ResultCode> SpendAsync(int itemId, int count)

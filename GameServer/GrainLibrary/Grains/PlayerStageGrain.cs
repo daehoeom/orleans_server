@@ -2,6 +2,7 @@ using Database.Db;
 using Database.Db.Row;
 using GrainLibrary.Grains.Dto;
 using GrainLibrary.Resource;
+using GrainLibrary.Utility;
 using SharedLibrary;
 using SharedLibrary.Packet.Data;
 
@@ -157,10 +158,11 @@ public class PlayerStageGrain(DatabaseService dbService, ResourceLoader resource
         }
 
         var walletGrain = GrainFactory.GetGrain<IPlayerWalletGrain>(PlayerId);
-        if (rStage.RewardCurrencyType != CurrencyType.None && rStage.RewardCurrencyAmount > 0)
-        {
-            await walletGrain.AddAsync(rStage.RewardCurrencyType, rStage.RewardCurrencyAmount);
-        }
+
+        var rewardGrant = await RewardHelper.GrantAsync(
+            GrainFactory, PlayerId,
+            [(rStage.RewardCurrencyType, rStage.RewardCurrencyAmount)],
+            []);
 
         return new StageClearResultDto
         {
@@ -176,6 +178,7 @@ public class PlayerStageGrain(DatabaseService dbService, ResourceLoader resource
             WalletInfo = await walletGrain.GetAllBalanceAsync(),
             Level = await levelGrain.GetLevelAsync(),
             Exp = await levelGrain.GetExpAsync(),
+            RewardGrant = rewardGrant,
         };
     }
 

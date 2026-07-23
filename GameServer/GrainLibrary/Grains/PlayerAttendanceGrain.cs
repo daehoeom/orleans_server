@@ -159,16 +159,11 @@ public class PlayerAttendanceGrain(DatabaseService dbService, ResourceLoader res
         _claimedRewardIds.Add(reward.RewardId);
 
         var walletGrain = GrainFactory.GetGrain<IPlayerWalletGrain>(PlayerId);
-        if (reward.RewardCurrencyType != CurrencyType.None && reward.RewardCurrencyAmount > 0)
-        {
-            await walletGrain.AddAsync(reward.RewardCurrencyType, reward.RewardCurrencyAmount);
-        }
 
-        if (reward.RewardItemId > 0 && reward.RewardItemCount > 0)
-        {
-            var inventoryGrain = GrainFactory.GetGrain<IPlayerInventoryGrain>(PlayerId);
-            await inventoryGrain.AddAsync(reward.RewardItemId, reward.RewardItemCount);
-        }
+        var rewardGrant = await RewardHelper.GrantAsync(
+            GrainFactory, PlayerId,
+            [(reward.RewardCurrencyType, reward.RewardCurrencyAmount)],
+            [(reward.RewardItemId, reward.RewardItemCount)]);
 
         return new AttendanceClaimResultDto
         {
@@ -180,6 +175,7 @@ public class PlayerAttendanceGrain(DatabaseService dbService, ResourceLoader res
             RewardItemId = reward.RewardItemId,
             RewardItemCount = reward.RewardItemCount,
             WalletInfo = await walletGrain.GetAllBalanceAsync(),
+            RewardGrant = rewardGrant,
         };
     }
 }
