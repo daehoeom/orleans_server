@@ -2,6 +2,10 @@ using ApiServer.Middleware;
 using Database.Db;
 using Database.Redis;
 using Database.Redis.RedisSet;
+using GrainLibrary.Logging;
+using Serilog;
+
+Log.Logger = LoggerBootstrap.CreateBootstrapLogger("ApiServer");
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,4 +35,11 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 
-app.Run();
+try
+{
+    app.Run();
+}
+finally
+{
+    await Log.CloseAndFlushAsync();
+}

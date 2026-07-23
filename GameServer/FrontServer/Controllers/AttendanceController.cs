@@ -43,6 +43,11 @@ public class AttendanceController(IClusterClient clusterClient)
             EventId = result.EventId,
             Day = result.Day,
             Claimed = result.Claimed,
+            RewardCurrencyType = result.RewardCurrencyType,
+            RewardCurrencyAmount = result.RewardCurrencyAmount,
+            RewardItemId = result.RewardItemId,
+            RewardItemCount = result.RewardItemCount,
+            WalletInfo = result.WalletInfo,
         });
     }
 

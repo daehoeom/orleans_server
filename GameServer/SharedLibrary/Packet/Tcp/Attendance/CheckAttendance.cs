@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using MessagePack;
 using SharedLibrary.Packet.Base;
+using SharedLibrary.Packet.Data;
 
 namespace SharedLibrary.Packet.Tcp.Attendance
 {
@@ -22,5 +24,20 @@ namespace SharedLibrary.Packet.Tcp.Attendance
 
         [Key(2)]
         public bool Claimed { get; set; }
+
+        [Key(3)]
+        public CurrencyType RewardCurrencyType { get; set; }
+
+        [Key(4)]
+        public long RewardCurrencyAmount { get; set; }
+
+        [Key(5)]
+        public int RewardItemId { get; set; }
+
+        [Key(6)]
+        public int RewardItemCount { get; set; }
+
+        [Key(7)]
+        public List<WalletInfo> WalletInfo { get; set; } = new();
     }
 }

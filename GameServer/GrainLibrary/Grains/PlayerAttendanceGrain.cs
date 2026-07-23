@@ -116,12 +116,24 @@ public class PlayerAttendanceGrain(DatabaseService dbService, ResourceLoader res
             progress.LastUpdatedAt = today;
         }
 
+        var claimResult = await ClaimRewardAsync(eventId, newDay);
+        if (claimResult.ResultCode is not (ResultCode.Success or ResultCode.AttendanceRewardNotFound or ResultCode.AlreadyClaimed))
+        {
+            return new AttendanceCheckResultDto { ResultCode = claimResult.ResultCode };
+        }
+
         return new AttendanceCheckResultDto
         {
             ResultCode = ResultCode.Success,
             EventId = eventId,
             Day = newDay,
-            Claimed = false,
+            Claimed = claimResult.ResultCode == ResultCode.Success,
+            RewardCurrencyType = claimResult.RewardCurrencyType,
+            RewardCurrencyAmount = claimResult.RewardCurrencyAmount,
+            RewardItemId = claimResult.RewardItemId,
+            RewardItemCount = claimResult.RewardItemCount,
+            WalletInfo = claimResult.WalletInfo,
+            RewardGrant = claimResult.RewardGrant,
         };
     }
 
@@ -133,6 +145,11 @@ public class PlayerAttendanceGrain(DatabaseService dbService, ResourceLoader res
             return new AttendanceClaimResultDto { ResultCode = ResultCode.NotCheckedYet };
         }
 
+        return await ClaimRewardAsync(eventId, day);
+    }
+
+    private async Task<AttendanceClaimResultDto> ClaimRewardAsync(int eventId, int day)
+    {
         var reward = resourceLoader.AttendanceReward.Find(eventId, day);
         if (reward is null)
         {
