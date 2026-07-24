@@ -11,4 +11,6 @@ public class RConstants
     public long MaxCurrencyAmount { get; set; } = 2_100_000_000;
     
     public int MaxUnitStack { get; set; } = 99_999;
+
+    public int ResetHour { get; set; } = 11;
 }

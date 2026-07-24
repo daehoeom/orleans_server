@@ -48,6 +48,11 @@ public class PlayerAttendanceGrain(DatabaseService dbService, ResourceService re
 
     public Task<AttendanceStateDto>? GetAsync(int eventId)
     {
+        if (!_progress.TryGetValue(eventId, out _))
+        {
+        }
+        
+        
         return !_progress.TryGetValue(eventId, out var progressValue) 
             ? null 
             : Task.FromResult(progressValue);
@@ -76,7 +81,7 @@ public class PlayerAttendanceGrain(DatabaseService dbService, ResourceService re
         {
             return new AttendanceRewardResultDto() { ResultCode = ResultCode.NotCheckedYet };
         }
-
+        
         if (eventData.RewardReceivedFlag.TryGetValue(rAttendance.RewardId, out var flag))
         {
             if (flag)
