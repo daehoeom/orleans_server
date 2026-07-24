@@ -13,7 +13,7 @@ public interface IPlayerStaminaGrain : IGrainWithIntegerKey
     Task<ResultCode> ConsumeAsync(int amount);
 }
 
-public class PlayerStaminaGrain(DatabaseService dbService, ResourceLoader resourceLoader) : Grain, IPlayerStaminaGrain
+public class PlayerStaminaGrain(DatabaseService dbService, ResourceService resourceService) : Grain, IPlayerStaminaGrain
 {
     private long PlayerId => this.GetPrimaryKeyLong();
 
@@ -34,7 +34,7 @@ public class PlayerStaminaGrain(DatabaseService dbService, ResourceLoader resour
         }
         else
         {
-            _maxAmount = resourceLoader.Constants.StaminaDefaultMaxAmount;
+            _maxAmount = resourceService.Constants.StaminaDefaultMaxAmount;
             _amount = _maxAmount;
             _lastUpdatedAt = TimeUtil.UtcNow;
         }
@@ -109,7 +109,7 @@ public class PlayerStaminaGrain(DatabaseService dbService, ResourceLoader resour
             return _amount;
         }
 
-        var intervalSeconds = resourceLoader.Constants.StaminaRecoverIntervalSeconds;
+        var intervalSeconds = resourceService.Constants.StaminaRecoverIntervalSeconds;
         if (intervalSeconds <= 0)
         {
             return _amount;
@@ -122,7 +122,7 @@ public class PlayerStaminaGrain(DatabaseService dbService, ResourceLoader resour
             return _amount;
         }
 
-        var recoverAmount = resourceLoader.Constants.StaminaRecoverAmount;
+        var recoverAmount = resourceService.Constants.StaminaRecoverAmount;
         var recoveredAmount = (int)Math.Min(_amount + intervals * recoverAmount, _maxAmount);
 
         lastUpdatedAt = recoveredAmount >= _maxAmount

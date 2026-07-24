@@ -13,7 +13,7 @@ public interface IPlayerLevelGrain : IGrainWithIntegerKey
     Task<ResultCode> AddExpAsync(long exp);
 }
 
-public class PlayerLevelGrain(DatabaseService dbService, ResourceLoader resourceLoader) : Grain, IPlayerLevelGrain
+public class PlayerLevelGrain(DatabaseService dbService, ResourceService resourceService) : Grain, IPlayerLevelGrain
 {
     private long PlayerId => this.GetPrimaryKeyLong();
 
@@ -73,7 +73,7 @@ public class PlayerLevelGrain(DatabaseService dbService, ResourceLoader resource
         var remainExp = _exp + exp;
         RLevel? rLevel;
 
-        while ((rLevel = resourceLoader.Level.Find(level)) is not null && remainExp >= rLevel.RequiredExp)
+        while ((rLevel = resourceService.Level.Find(level)) is not null && remainExp >= rLevel.RequiredExp)
         {
             remainExp -= rLevel.RequiredExp;
             level = rLevel.NextLevel;

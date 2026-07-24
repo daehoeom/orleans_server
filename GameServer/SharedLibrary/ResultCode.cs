@@ -56,8 +56,8 @@ namespace SharedLibrary
         
         #region Event Error
         
-        AlreadyCheckedToday = -7000,
-        AlreadyClaimed,
+        NotEventActivate = -7000,
+        AlreadyRewardReceived,
         AttendanceEventNotFound,
         AttendanceEventEnded,
         NotCheckedYet,

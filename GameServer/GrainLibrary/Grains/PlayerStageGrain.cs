@@ -18,7 +18,7 @@ public interface IPlayerStageGrain : IGrainWithIntegerKey
     Task<ResultCode> FailStageAsync(int stageIndex);
 }
 
-public class PlayerStageGrain(DatabaseService dbService, ResourceLoader resourceLoader) : Grain, IPlayerStageGrain
+public class PlayerStageGrain(DatabaseService dbService, ResourceService resourceService) : Grain, IPlayerStageGrain
 {
     private long PlayerId => this.GetPrimaryKeyLong();
 
@@ -68,7 +68,7 @@ public class PlayerStageGrain(DatabaseService dbService, ResourceLoader resource
 
     public async Task<StageEnterResultDto> EnterStageAsync(int stageIndex)
     {
-        var rStage = resourceLoader.Stage.Find(stageIndex);
+        var rStage = resourceService.Stage.Find(stageIndex);
         if (rStage is null)
         {
             return new StageEnterResultDto { ResultCode = ResultCode.StageNotFound };
@@ -99,7 +99,7 @@ public class PlayerStageGrain(DatabaseService dbService, ResourceLoader resource
     public async Task<StageClearResultDto> ClearStageAsync(
         int stageIndex, bool missionStep1, bool missionStep2, bool missionStep3, short clearScore)
     {
-        var rStage = resourceLoader.Stage.Find(stageIndex);
+        var rStage = resourceService.Stage.Find(stageIndex);
         if (rStage is null)
         {
             return new StageClearResultDto { ResultCode = ResultCode.StageNotFound };
@@ -184,7 +184,7 @@ public class PlayerStageGrain(DatabaseService dbService, ResourceLoader resource
 
     public Task<ResultCode> FailStageAsync(int stageIndex)
     {
-        var rStage = resourceLoader.Stage.Find(stageIndex);
+        var rStage = resourceService.Stage.Find(stageIndex);
         if (rStage is null)
         {
             return Task.FromResult(ResultCode.StageNotFound);

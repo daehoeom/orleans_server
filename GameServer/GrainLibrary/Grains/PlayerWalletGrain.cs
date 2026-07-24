@@ -1,5 +1,6 @@
 using Database.Db;
 using GrainLibrary.Grains.Dto;
+using GrainLibrary.Resource;
 using SharedLibrary;
 using SharedLibrary.Packet.Data;
 
@@ -14,7 +15,8 @@ public interface IPlayerWalletGrain : IGrainWithIntegerKey
     Task<ResultCode> IsEnoughAsync(CurrencyType currencyType, long amount);
 }
 
-public class PlayerWalletGrain(DatabaseService dbService) : Grain, IPlayerWalletGrain
+public class PlayerWalletGrain(DatabaseService dbService, ResourceService resourceService) 
+    : Grain, IPlayerWalletGrain
 {
     private long PlayerId => this.GetPrimaryKeyLong();
 
@@ -76,7 +78,7 @@ public class PlayerWalletGrain(DatabaseService dbService) : Grain, IPlayerWallet
     {
         var balance = _wallets.GetValueOrDefault(currencyType)?.Amount ?? 0;
 
-        var addAmount = Math.Min(amount, SharedConstant.MAX_CURRENCY_AMOUNT - balance);
+        var addAmount = Math.Min(amount,  - balance);
         if (addAmount <= 0)
         {
             return new WalletAddResult { Requested = amount, Granted = 0, NewBalance = balance, ResultCode = ResultCode.Success };

@@ -14,7 +14,7 @@ public interface IPlayerInventoryGrain : IGrainWithIntegerKey
     Task<ResultCode> SpendAsync(int itemId, int count);
 }
 
-public class PlayerInventoryGrain(DatabaseService dbService, ResourceLoader resourceLoader) 
+public class PlayerInventoryGrain(DatabaseService dbService, ResourceService resourceService) 
     : Grain, IPlayerInventoryGrain
 {
     private long PlayerId => this.GetPrimaryKeyLong();
@@ -55,7 +55,7 @@ public class PlayerInventoryGrain(DatabaseService dbService, ResourceLoader reso
 
         var currentCount = _items.GetValueOrDefault(itemId)?.Count ?? 0;
 
-        var rItem = resourceLoader.Item.Find(itemId);
+        var rItem = resourceService.Item.Find(itemId);
         var maxStack = rItem?.MaxStack ?? 0;
         var room = maxStack > 0 ? maxStack - currentCount : count;
         var addCount = Math.Max(0, Math.Min(count, room));

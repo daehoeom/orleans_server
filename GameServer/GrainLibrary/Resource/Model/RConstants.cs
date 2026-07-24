@@ -7,4 +7,8 @@ public class RConstants
     public int StaminaRecoverAmount { get; set; }
 
     public int StaminaDefaultMaxAmount { get; set; }
+    
+    public long MaxCurrencyAmount { get; set; } = 2_100_000_000;
+    
+    public int MaxUnitStack { get; set; } = 99_999;
 }

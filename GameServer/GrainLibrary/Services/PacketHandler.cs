@@ -55,8 +55,6 @@ public class PacketHandler
                 Target = target,
                 MethodInfo = method,
             };
-            
-            _logger.LogInformation($"[PacketHandler] 등록: {attr.HeaderType} → {method.Name} ({requestType.Name})");
         }
     }
 

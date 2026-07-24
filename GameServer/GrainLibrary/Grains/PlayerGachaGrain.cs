@@ -11,7 +11,7 @@ public interface IPlayerGachaGrain : IGrainWithIntegerKey
     Task<GachaResultDto> RollingGachaAsync(int gachaId, int count);
 }
 
-public class PlayerGachaGrain(ResourceLoader resourceLoader) : Grain, IPlayerGachaGrain
+public class PlayerGachaGrain(ResourceService resourceService) : Grain, IPlayerGachaGrain
 {
     private long PlayerId => this.GetPrimaryKeyLong();
 
@@ -22,13 +22,13 @@ public class PlayerGachaGrain(ResourceLoader resourceLoader) : Grain, IPlayerGac
             return new GachaResultDto { ResultCode = ResultCode.InvalidParameter };
         }
 
-        var rGacha = resourceLoader.Gacha.Find(gachaId);
+        var rGacha = resourceService.Gacha.Find(gachaId);
         if (rGacha is null)
         {
             return new GachaResultDto { ResultCode = ResultCode.GachaNotFound };
         }
 
-        var pool = resourceLoader.GachaUnit.FindAll(gachaId);
+        var pool = resourceService.GachaUnit.FindAll(gachaId);
         if (pool.Count <= 0)
         {
             return new GachaResultDto { ResultCode = ResultCode.GachaPoolEmpty };

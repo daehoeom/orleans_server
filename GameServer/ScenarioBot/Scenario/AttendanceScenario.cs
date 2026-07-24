@@ -23,28 +23,14 @@ public class AttendanceScenario : IScenario
             throw new Exception($"[{Name}] LoadAttendance 실패: {loadRes.ResultCode}");
         }
 
-        Console.WriteLine($"[{Name}] 현재 상태: Day={loadRes.Stream.Day}/{loadRes.Stream.MaxDay}, Claimed={loadRes.Stream.Claimed}");
-
-        await session.SendAsync(PacketHeaderType.CheckAttendance, new CheckAttendanceReq
+        await session.SendAsync(PacketHeaderType.ReceiveAttendanceReward, new ReceiveAttendanceRewardReq
         {
             EventId = EventId,
+            Day = 1,
         });
 
-        var checkRes = await session.WaitForResponseAsync<CheckAttendanceRes>();
-        if (checkRes.ResultCode != ResultCode.Success && checkRes.ResultCode != ResultCode.AlreadyCheckedToday)
-        {
-            throw new Exception($"[{Name}] CheckAttendance 실패: {checkRes.ResultCode}");
-        }
-
-        Console.WriteLine($"[{Name}] 출석 체크: Day={checkRes.Stream.Day}, ResultCode={checkRes.ResultCode}");
-
-        await session.SendAsync(PacketHeaderType.ClaimAttendance, new ClaimAttendanceReq
-        {
-            EventId = EventId,
-        });
-
-        var claimRes = await session.WaitForResponseAsync<ClaimAttendanceRes>();
-        if (claimRes.ResultCode != ResultCode.Success && claimRes.ResultCode != ResultCode.AlreadyClaimed)
+        var claimRes = await session.WaitForResponseAsync<ReceiveAttendanceRewardRes>();
+        if (claimRes.ResultCode != ResultCode.Success && claimRes.ResultCode != ResultCode.AlreadyRewardReceived)
         {
             throw new Exception($"[{Name}] ClaimAttendance 실패: {claimRes.ResultCode}");
         }

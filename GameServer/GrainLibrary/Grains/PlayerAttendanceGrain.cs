@@ -9,189 +9,101 @@ namespace GrainLibrary.Grains;
 
 public interface IPlayerAttendanceGrain : IGrainWithIntegerKey
 {
-    Task<AttendanceStateDto> GetAsync(int eventId);
-    Task<AttendanceCheckResultDto> CheckAsync(int eventId);
-    Task<AttendanceClaimResultDto> ClaimAsync(int eventId);
+    Task<AttendanceStateDto>? GetAsync(int eventId);
+    Task<AttendanceRewardResultDto> ReceiveRewardAsync(int eventId, int day);
 }
 
-public class PlayerAttendanceGrain(DatabaseService dbService, ResourceLoader resourceLoader) : Grain, IPlayerAttendanceGrain
+public class PlayerAttendanceGrain(DatabaseService dbService, ResourceService resourceService) : Grain, IPlayerAttendanceGrain
 {
     private long PlayerId => this.GetPrimaryKeyLong();
 
-    private class EventProgress
-    {
-        public int Day { get; set; }
-        public DateTime LastUpdatedAt { get; set; }
-    }
-
-    private readonly Dictionary<int, EventProgress> _progress = new();
-    private readonly HashSet<int> _claimedRewardIds = new();
+    private readonly Dictionary<int, AttendanceStateDto> _progress = new();
 
     public override async Task OnActivateAsync(CancellationToken cancellationToken)
     {
         var progressRows = await dbService.Game.EventAttendance.GetsAsync(PlayerId);
         foreach (var row in progressRows)
         {
-            _progress[row.event_id] = new EventProgress
+            _progress[row.event_id] = new AttendanceStateDto
             {
-                Day = row.day,
-                LastUpdatedAt = row.last_updated_at,
+                EventId = row.event_id,
+                CurrentDay = row.day,
             };
         }
 
         var rewardRows = await dbService.Game.EventAttendanceRewards.GetsAsync(PlayerId);
         foreach (var row in rewardRows)
         {
-            if (row.received_flag)
+            if (!_progress.TryGetValue(row.event_id, out var dto))
             {
-                _claimedRewardIds.Add(row.reward_id);
+                continue;
             }
+
+            dto.RewardReceivedFlag.Add(row.reward_id, row.received_flag);
         }
 
         await base.OnActivateAsync(cancellationToken);
     }
 
-    public Task<AttendanceStateDto> GetAsync(int eventId)
+    public Task<AttendanceStateDto>? GetAsync(int eventId)
     {
-        var day = _progress.GetValueOrDefault(eventId)?.Day ?? 0;
-        var reward = day > 0 ? resourceLoader.AttendanceReward.Find(eventId, day) : null;
-        var claimed = reward is not null && _claimedRewardIds.Contains(reward.RewardId);
-
-        return Task.FromResult(new AttendanceStateDto
-        {
-            EventId = eventId,
-            Day = day,
-            Claimed = claimed,
-            MaxDay = resourceLoader.AttendanceReward.GetMaxDay(eventId),
-        });
+        return !_progress.TryGetValue(eventId, out var progressValue) 
+            ? null 
+            : Task.FromResult(progressValue);
     }
 
-    public async Task<AttendanceCheckResultDto> CheckAsync(int eventId)
+    public async Task<AttendanceRewardResultDto> ReceiveRewardAsync(int eventId, int day)
     {
-        var maxDay = resourceLoader.AttendanceReward.GetMaxDay(eventId);
-        if (maxDay <= 0)
+        var rAttendance = resourceService.Attendance.Get(eventId, day);
+        if (rAttendance is null)
         {
-            return new AttendanceCheckResultDto { ResultCode = ResultCode.AttendanceEventNotFound };
+            return new AttendanceRewardResultDto { ResultCode = ResultCode.AttendanceEventNotFound };
         }
 
-        _progress.TryGetValue(eventId, out var progress);
-        var currentDay = progress?.Day ?? 0;
-        if (currentDay >= maxDay)
+        if (!_progress.TryGetValue(eventId, out var eventData))
         {
-            return new AttendanceCheckResultDto { ResultCode = ResultCode.AttendanceEventEnded };
+            return new AttendanceRewardResultDto() { ResultCode = ResultCode.NotCheckedYet };
         }
 
-        var today = TimeUtil.UtcNow.Date;
-        if (progress is not null && progress.LastUpdatedAt.Date == today)
+        if (eventData.RewardReceivedFlag.TryGetValue(rAttendance.RewardId, out var flag))
         {
-            return new AttendanceCheckResultDto { ResultCode = ResultCode.AlreadyCheckedToday };
-        }
-
-        var newDay = currentDay + 1;
-
-        if (progress is null)
-        {
-            var insertedRow = await dbService.Game.EventAttendance.InsertAsync(new PlayerEventAttendanceRow
+            if (flag)
             {
-                player_id = PlayerId,
-                event_id = eventId,
-                day = newDay,
-            });
-            if (insertedRow <= 0)
-            {
-                return new AttendanceCheckResultDto { ResultCode = ResultCode.DbInsertError };
+                return new AttendanceRewardResultDto { ResultCode = ResultCode.AlreadyRewardReceived };
             }
-
-            _progress[eventId] = new EventProgress { Day = newDay, LastUpdatedAt = today };
         }
-        else
-        {
-            var affectedRow = await dbService.Game.EventAttendance.UpdateAsync(PlayerId, eventId, newDay, today);
-            if (affectedRow <= 0)
-            {
-                return new AttendanceCheckResultDto { ResultCode = ResultCode.DbUpdateError };
-            }
-
-            progress.Day = newDay;
-            progress.LastUpdatedAt = today;
-        }
-
-        var claimResult = await ClaimRewardAsync(eventId, newDay);
-        if (claimResult.ResultCode is not (ResultCode.Success or ResultCode.AttendanceRewardNotFound or ResultCode.AlreadyClaimed))
-        {
-            return new AttendanceCheckResultDto { ResultCode = claimResult.ResultCode };
-        }
-
-        return new AttendanceCheckResultDto
-        {
-            ResultCode = ResultCode.Success,
-            EventId = eventId,
-            Day = newDay,
-            Claimed = claimResult.ResultCode == ResultCode.Success,
-            RewardCurrencyType = claimResult.RewardCurrencyType,
-            RewardCurrencyAmount = claimResult.RewardCurrencyAmount,
-            RewardItemId = claimResult.RewardItemId,
-            RewardItemCount = claimResult.RewardItemCount,
-            WalletInfo = claimResult.WalletInfo,
-            RewardGrant = claimResult.RewardGrant,
-        };
-    }
-
-    public async Task<AttendanceClaimResultDto> ClaimAsync(int eventId)
-    {
-        var day = _progress.GetValueOrDefault(eventId)?.Day ?? 0;
-        if (day <= 0)
-        {
-            return new AttendanceClaimResultDto { ResultCode = ResultCode.NotCheckedYet };
-        }
-
-        return await ClaimRewardAsync(eventId, day);
-    }
-
-    private async Task<AttendanceClaimResultDto> ClaimRewardAsync(int eventId, int day)
-    {
-        var reward = resourceLoader.AttendanceReward.Find(eventId, day);
-        if (reward is null)
-        {
-            return new AttendanceClaimResultDto { ResultCode = ResultCode.AttendanceRewardNotFound };
-        }
-
-        if (_claimedRewardIds.Contains(reward.RewardId))
-        {
-            return new AttendanceClaimResultDto { ResultCode = ResultCode.AlreadyClaimed };
-        }
-
+        
         var insertedRow = await dbService.Game.EventAttendanceRewards.InsertAsync(new PlayerEventAttendanceRewardRow
         {
             player_id = PlayerId,
-            event_id = eventId,
-            reward_id = reward.RewardId,
+            event_id = rAttendance.EventId,
+            reward_id = rAttendance.RewardId,
             received_flag = true,
         });
         if (insertedRow <= 0)
         {
-            return new AttendanceClaimResultDto { ResultCode = ResultCode.DbInsertError };
+            return new AttendanceRewardResultDto { ResultCode = ResultCode.DbInsertError };
         }
-
-        _claimedRewardIds.Add(reward.RewardId);
 
         var walletGrain = GrainFactory.GetGrain<IPlayerWalletGrain>(PlayerId);
 
         var rewardGrant = await RewardHelper.GrantAsync(
             GrainFactory, PlayerId,
-            [(reward.RewardCurrencyType, reward.RewardCurrencyAmount)],
-            [(reward.RewardItemId, reward.RewardItemCount)]);
+            [(rAttendance.RewardCurrencyType, rAttendance.RewardCurrencyAmount)],
+            [(rAttendance.RewardItemId, rAttendance.RewardItemCount)]);
 
-        return new AttendanceClaimResultDto
+        var walletInfo = await walletGrain.GetAllBalanceAsync(); 
+        
+        return new AttendanceRewardResultDto
         {
             ResultCode = ResultCode.Success,
             EventId = eventId,
             Day = day,
-            RewardCurrencyType = reward.RewardCurrencyType,
-            RewardCurrencyAmount = reward.RewardCurrencyAmount,
-            RewardItemId = reward.RewardItemId,
-            RewardItemCount = reward.RewardItemCount,
-            WalletInfo = await walletGrain.GetAllBalanceAsync(),
+            RewardCurrencyType = rAttendance.RewardCurrencyType,
+            RewardCurrencyAmount = rAttendance.RewardCurrencyAmount,
+            RewardItemId = rAttendance.RewardItemId,
+            RewardItemCount = rAttendance.RewardItemCount,
+            WalletInfo = walletInfo,
             RewardGrant = rewardGrant,
         };
     }

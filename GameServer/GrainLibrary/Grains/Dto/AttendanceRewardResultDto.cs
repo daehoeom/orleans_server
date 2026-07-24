@@ -3,7 +3,7 @@ using SharedLibrary.Packet.Data;
 
 namespace GrainLibrary.Grains.Dto;
 
-public class AttendanceClaimResultDto
+public class AttendanceRewardResultDto
 {
     public ResultCode ResultCode { get; set; }
 

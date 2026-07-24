@@ -13,7 +13,7 @@ namespace GrainLibrary.Server;
 
 public class ServerRunner(
     ILogger<ServerRunner> logger,
-    ResourceLoader resourceLoader,
+    ResourceService resourceService,
     DatabaseService databaseService,
     RedisService redisService,
     GameServerHandler handler)
@@ -95,7 +95,7 @@ public class ServerRunner(
 
     public override async Task StartAsync(CancellationToken _)
     {
-        resourceLoader.LoadAll();
+        resourceService.LoadAll();
 
         await databaseService.CheckConnectionAsync();
         await redisService.ConnectAsync();

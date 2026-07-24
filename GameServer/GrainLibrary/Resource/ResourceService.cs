@@ -4,12 +4,11 @@ using System.Text.Json.Serialization;
 using GrainLibrary.Resource.Attribute;
 using GrainLibrary.Resource.Model;
 using GrainLibrary.Resource.Model.DataSet;
-using GrainLibrary.Resource.Model.Row;
 using Microsoft.Extensions.Logging;
 
 namespace GrainLibrary.Resource;
 
-public class ResourceLoader(ILogger<ResourceLoader> logger)
+public class ResourceService(ILogger<ResourceService> logger)
 {
     private static readonly string DataRoot = Path.Combine(AppContext.BaseDirectory, "TableData", "Json");
 
@@ -27,23 +26,23 @@ public class ResourceLoader(ILogger<ResourceLoader> logger)
     public RGachaDataSet Gacha { get; private set; } = null!;
     public RGachaUnitDataSet GachaUnit { get; private set; } = null!;
     public RStageDataSet Stage { get; private set; } = null!;
-    public RAttendanceRewardDataSet AttendanceReward { get; private set; } = null!;
+    public RAttendanceDataSet Attendance { get; private set; } = null!;
     public RConstants Constants { get; private set; } = null!;
 
     public void LoadAll()
     {
         var errors = new List<string>();
 
-        ShopProduct = Load<RShopProductDataSet, RShopProduct>(errors);
-        Level = Load<RLevelDataSet, RLevel>(errors);
-        Unit = Load<RUnitDataSet, RUnit>(errors);
-        UnitLevel = Load<RUnitLevelDataSet, RUnitLevel>(errors);
-        Item = Load<RItemDataSet, RItem>(errors);
-        Gacha = Load<RGachaDataSet, RGacha>(errors);
-        GachaUnit = Load<RGachaUnitDataSet, RGachaUnit>(errors);
-        Stage = Load<RStageDataSet, RStage>(errors);
-        AttendanceReward = Load<RAttendanceRewardDataSet, RAttendanceReward>(errors);
-        Constants = LoadConstants(errors);
+        // Constants = LoadConstants(errors);
+        // ShopProduct = Load<RShopProductDataSet, RShopProduct>(errors);
+        // Level = Load<RLevelDataSet, RLevel>(errors);
+        // Unit = Load<RUnitDataSet, RUnit>(errors);
+        // UnitLevel = Load<RUnitLevelDataSet, RUnitLevel>(errors);
+        // Item = Load<RItemDataSet, RItem>(errors);
+        // Gacha = Load<RGachaDataSet, RGacha>(errors);
+        // GachaUnit = Load<RGachaUnitDataSet, RGachaUnit>(errors);
+        // Stage = Load<RStageDataSet, RStage>(errors);
+        // AttendanceReward = Load<RAttendanceDataSet, RAttendanceReward>(errors);
 
         if (errors.Count > 0)
         {

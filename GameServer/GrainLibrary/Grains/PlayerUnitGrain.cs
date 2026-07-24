@@ -16,7 +16,7 @@ public interface IPlayerUnitGrain : IGrainWithIntegerKey
     Task<ResultCode> LevelUpAsync(int unitId);
 }
 
-public class PlayerUnitGrain(DatabaseService dbService, ResourceLoader resourceLoader) : Grain, IPlayerUnitGrain
+public class PlayerUnitGrain(DatabaseService dbService, ResourceService resourceService) : Grain, IPlayerUnitGrain
 {
     private long PlayerId => this.GetPrimaryKeyLong();
 
@@ -63,7 +63,7 @@ public class PlayerUnitGrain(DatabaseService dbService, ResourceLoader resourceL
     {
         if (_units.TryGetValue(unitId, out var unit))
         {
-            if (unit.Stack >= SharedConstant.MAX_UNIT_STACK)
+            if (unit.Stack >= resourceService.Constants.MaxUnitStack)
             {
                 return ResultCode.MaxUnitStack;
             }
@@ -107,7 +107,7 @@ public class PlayerUnitGrain(DatabaseService dbService, ResourceLoader resourceL
             return ResultCode.NotFoundUnit;
         }
 
-        var rUnitLevel = resourceLoader.UnitLevel.Find(unitId, unit.Level);
+        var rUnitLevel = resourceService.UnitLevel.Find(unitId, unit.Level);
         if (rUnitLevel is null)
         {
             return ResultCode.MaxLevelUnit;

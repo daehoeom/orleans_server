@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MessagePack;
 using SharedLibrary.Packet.Base;
 
@@ -20,10 +21,7 @@ namespace SharedLibrary.Packet.Tcp.Attendance
         [Key(1)]
         public int Day { get; set; }
 
-        [Key(2)]
-        public bool Claimed { get; set; }
-
-        [Key(3)]
-        public int MaxDay { get; set; }
+        [Key(2)] 
+        public Dictionary<int, bool> ReceiveRewardFlag { get; set; } = new();
     }
 }

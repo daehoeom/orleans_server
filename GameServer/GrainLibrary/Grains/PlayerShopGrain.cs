@@ -11,7 +11,7 @@ public interface IPlayerShopGrain : IGrainWithIntegerKey
     Task<ResultCode> PurchaseProductAsync(long playerId, int productId, int count);
 }
 
-public class PlayerShopGrain(DatabaseService dbService, ResourceLoader resourceLoader) : Grain, IPlayerShopGrain
+public class PlayerShopGrain(DatabaseService dbService, ResourceService resourceService) : Grain, IPlayerShopGrain
 {
     public async Task<ResultCode> PurchaseProductAsync(long playerId, int productId, int count)
     {
@@ -20,7 +20,7 @@ public class PlayerShopGrain(DatabaseService dbService, ResourceLoader resourceL
             return ResultCode.InvalidParameter;
         }
 
-        var rProduct = resourceLoader.ShopProduct.Find(productId);
+        var rProduct = resourceService.ShopProduct.Find(productId);
         if (rProduct is null)
         {
             return ResultCode.ProductNotFound;

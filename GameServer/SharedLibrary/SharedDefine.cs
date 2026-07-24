@@ -43,9 +43,10 @@
         SSR,
     }
 
-    public static class SharedConstant
+    public enum EventType
     {
-        public static readonly long MAX_CURRENCY_AMOUNT = 2_100_000_000;
-        public static readonly int MAX_UNIT_STACK = 99_999;
-    }    
+        None = 0,
+        Attendance,
+        Roulette,
+    }
 }
