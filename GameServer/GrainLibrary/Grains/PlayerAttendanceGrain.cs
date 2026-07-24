@@ -4,6 +4,7 @@ using GrainLibrary.Grains.Dto;
 using GrainLibrary.Resource;
 using GrainLibrary.Utility;
 using SharedLibrary;
+using SharedLibrary.Packet.Data;
 
 namespace GrainLibrary.Grains;
 
@@ -54,12 +55,23 @@ public class PlayerAttendanceGrain(DatabaseService dbService, ResourceService re
 
     public async Task<AttendanceRewardResultDto> ReceiveRewardAsync(int eventId, int day)
     {
+        var rEventSchedule = resourceService.EventSchedule.Get(eventId);
+        if (rEventSchedule is null)
+        {
+            return new AttendanceRewardResultDto { ResultCode = ResultCode.AttendanceEventNotFound };
+        }
+
+        if (TimeUtil.IsExpired(rEventSchedule.EndDateTime))
+        {
+            return new AttendanceRewardResultDto { ResultCode = ResultCode.EventEnded };
+        }
+        
         var rAttendance = resourceService.Attendance.Get(eventId, day);
         if (rAttendance is null)
         {
             return new AttendanceRewardResultDto { ResultCode = ResultCode.AttendanceEventNotFound };
         }
-
+        
         if (!_progress.TryGetValue(eventId, out var eventData))
         {
             return new AttendanceRewardResultDto() { ResultCode = ResultCode.NotCheckedYet };
@@ -85,25 +97,37 @@ public class PlayerAttendanceGrain(DatabaseService dbService, ResourceService re
             return new AttendanceRewardResultDto { ResultCode = ResultCode.DbInsertError };
         }
 
-        var walletGrain = GrainFactory.GetGrain<IPlayerWalletGrain>(PlayerId);
-
         var rewardGrant = await RewardHelper.GrantAsync(
             GrainFactory, PlayerId,
             [(rAttendance.RewardCurrencyType, rAttendance.RewardCurrencyAmount)],
             [(rAttendance.RewardItemId, rAttendance.RewardItemCount)]);
 
-        var walletInfo = await walletGrain.GetAllBalanceAsync(); 
+        var rewardResult = new RewardResultModel
+        {
+            RewardCurrencies =
+            [
+                new WalletModel
+                {
+                    CurrencyType = rAttendance.RewardCurrencyType,
+                    Amount = rAttendance.RewardCurrencyAmount,
+                }
+            ],
+            RewardItems =
+            [
+                new ItemModel
+                {
+                    ItemId = rAttendance.RewardItemId,
+                    Count = rAttendance.RewardItemCount,
+                }
+            ]
+        };
         
         return new AttendanceRewardResultDto
         {
             ResultCode = ResultCode.Success,
             EventId = eventId,
             Day = day,
-            RewardCurrencyType = rAttendance.RewardCurrencyType,
-            RewardCurrencyAmount = rAttendance.RewardCurrencyAmount,
-            RewardItemId = rAttendance.RewardItemId,
-            RewardItemCount = rAttendance.RewardItemCount,
-            WalletInfo = walletInfo,
+            RewardResult = rewardResult, 
             RewardGrant = rewardGrant,
         };
     }

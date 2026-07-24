@@ -29,10 +29,10 @@ namespace SharedLibrary.Packet.Tcp.Stage
     public class ClearStageRes
     {
         [Key(0)]
-        public StageInfo StageInfo { get; set; } = new();
+        public StageInfoModel StageInfoModel { get; set; } = new();
 
         [Key(1)]
-        public List<WalletInfo> WalletInfo { get; set; } = new();
+        public List<WalletModel> WalletInfo { get; set; } = new();
 
         [Key(2)]
         public int Level { get; set; }

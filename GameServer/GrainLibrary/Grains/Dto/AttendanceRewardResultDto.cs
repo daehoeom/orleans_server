@@ -11,15 +11,7 @@ public class AttendanceRewardResultDto
 
     public int Day { get; set; }
 
-    public CurrencyType RewardCurrencyType { get; set; }
-
-    public long RewardCurrencyAmount { get; set; }
-
-    public int RewardItemId { get; set; }
-
-    public int RewardItemCount { get; set; }
-
-    public List<WalletInfo> WalletInfo { get; set; } = new();
+    public RewardResultModel RewardResult { get; set; } = new();
 
     public RewardGrantResult RewardGrant { get; set; } = new();
 }

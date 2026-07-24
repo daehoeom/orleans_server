@@ -26,6 +26,7 @@ public class ResourceService(ILogger<ResourceService> logger)
     public RGachaDataSet Gacha { get; private set; } = null!;
     public RGachaUnitDataSet GachaUnit { get; private set; } = null!;
     public RStageDataSet Stage { get; private set; } = null!;
+    public REventScheduleDataSet EventSchedule { get; private set; } = null!;
     public RAttendanceDataSet Attendance { get; private set; } = null!;
     public RConstants Constants { get; private set; } = null!;
 

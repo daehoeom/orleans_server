@@ -15,6 +15,6 @@ namespace SharedLibrary.Packet.Tcp.Mail
     public class LoadMailRes
     {
         [Key(0)]
-        public List<MailInfo> Mails { get; set; } = new();
+        public List<MailModel> Mails { get; set; } = new();
     }
 }

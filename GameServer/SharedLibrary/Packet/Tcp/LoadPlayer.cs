@@ -18,19 +18,19 @@ namespace SharedLibrary.Packet.Tcp
         public long PlayerId { get; set; }
 
         [Key(1)] 
-        public List<WalletInfo> WalletInfo { get; set; } = new List<WalletInfo>();
+        public List<WalletModel> WalletInfo { get; set; } = new List<WalletModel>();
         
         [Key(2)]
-        public List<UnitInfo> UnitInfo { get; set; } = new List<UnitInfo>();
+        public List<UnitModel> UnitInfo { get; set; } = new List<UnitModel>();
         
         [Key(3)]
-        public List<StageInfo> StageInfo { get; set; } = new List<StageInfo>();
+        public List<StageInfoModel> StageInfo { get; set; } = new List<StageInfoModel>();
         
         [Key(4)]
-        public StaminaInfo StaminaInfo { get; set; } = new StaminaInfo();
+        public StaminaModel StaminaModel { get; set; } = new StaminaModel();
         
         [Key(5)]
-        public List<ItemInfo> ItemInfo { get; set; } = new List<ItemInfo>();
+        public List<ItemModel> ItemInfo { get; set; } = new List<ItemModel>();
     }
 }
 

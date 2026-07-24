@@ -9,7 +9,7 @@ namespace GrainLibrary.Grains;
 
 public interface IPlayerStaminaGrain : IGrainWithIntegerKey
 {
-    Task<StaminaInfo> GetAsync();
+    Task<StaminaModel> GetAsync();
     Task<ResultCode> ConsumeAsync(int amount);
 }
 
@@ -42,11 +42,11 @@ public class PlayerStaminaGrain(DatabaseService dbService, ResourceService resou
         await base.OnActivateAsync(cancellationToken);
     }
 
-    public Task<StaminaInfo> GetAsync()
+    public Task<StaminaModel> GetAsync()
     {
         var amount = CalculateRecoveredAmount(out _);
 
-        return Task.FromResult(new StaminaInfo
+        return Task.FromResult(new StaminaModel
         {
             Amount = amount,
             MaxAmount = _maxAmount,

@@ -1,19 +1,34 @@
 using GrainLibrary.Grains;
 using GrainLibrary.Models;
+using GrainLibrary.Resource;
 using GrainLibrary.Services;
+using GrainLibrary.Utility;
 using SharedLibrary;
 using SharedLibrary.Packet.Base;
 using SharedLibrary.Packet.Tcp.Attendance;
 
 namespace GameServer.Controllers;
 
-public class EventController(IClusterClient clusterClient)
+public class EventController(IClusterClient clusterClient, ResourceService resourceService)
     : PlayerBaseController(clusterClient)
 {
     [PacketHandler(PacketHeaderType.LoadAttendance)]
     public async Task LoadAttendanceAsync(PlayerSession player, LoadAttendanceReq req)
     {
         var attendanceGrain = _clusterClient.GetGrain<IPlayerAttendanceGrain>(player.SessionId);
+
+        var rEventSchedule = resourceService.EventSchedule.Get(req.EventId);
+        if (rEventSchedule is null)
+        {
+            await SendAsync<LoadAttendanceRes>(player, ResultCode.AttendanceEventNotFound);
+            return;
+        }
+
+        if (TimeUtil.IsExpired(rEventSchedule.EndDateTime))
+        {
+            await SendAsync<LoadAttendanceRes>(player, ResultCode.EventEnded);
+            return;
+        }
         
         var state = await attendanceGrain.GetAsync(req.EventId);
         await SendAsync(player, response: new LoadAttendanceRes
@@ -40,11 +55,7 @@ public class EventController(IClusterClient clusterClient)
         {
             EventId = result.EventId,
             Day = result.Day,
-            RewardCurrencyType = result.RewardCurrencyType,
-            RewardCurrencyAmount = result.RewardCurrencyAmount,
-            RewardItemId = result.RewardItemId,
-            RewardItemCount = result.RewardItemCount,
-            WalletInfo = result.WalletInfo,
+            RewardResult = result.RewardResult,
         });
     }
 }

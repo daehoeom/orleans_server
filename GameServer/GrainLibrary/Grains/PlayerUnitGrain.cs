@@ -11,7 +11,7 @@ public interface IPlayerUnitGrain : IGrainWithIntegerKey
 {
     Task<UnitDto?> GetAsync(int unitId);
     Task<IReadOnlyList<UnitDto>> GetAllAsync();
-    Task<List<UnitInfo>> GetAllInfoAsync();
+    Task<List<UnitModel>> GetAllInfoAsync();
     Task<ResultCode> AddOrUpdateAsync(int unitId, int level);
     Task<ResultCode> LevelUpAsync(int unitId);
 }
@@ -48,9 +48,9 @@ public class PlayerUnitGrain(DatabaseService dbService, ResourceService resource
         return Task.FromResult<IReadOnlyList<UnitDto>>(_units.Values.ToList());
     }
 
-    public Task<List<UnitInfo>> GetAllInfoAsync()
+    public Task<List<UnitModel>> GetAllInfoAsync()
     {
-        var result = _units.Select(p => new UnitInfo
+        var result = _units.Select(p => new UnitModel
         {
             UnitId = p.Value.UnitId,
             Stack = p.Value.Stack,

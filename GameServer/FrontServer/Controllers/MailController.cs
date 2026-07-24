@@ -37,7 +37,7 @@ public class MailController(IClusterClient clusterClient)
 
         await SendAsync(player, response: new ReadMailRes
         {
-            MailInfo = result.MailInfo!,
+            MailModel = result.MailInfo!,
             WalletInfo = result.WalletInfo,
         });
     }

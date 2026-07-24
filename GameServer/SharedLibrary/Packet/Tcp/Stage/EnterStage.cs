@@ -19,6 +19,6 @@ namespace SharedLibrary.Packet.Tcp.Stage
         public int StageId { get; set; }
 
         [Key(1)]
-        public StaminaInfo StaminaInfo { get; set; } = new();
+        public StaminaModel StaminaModel { get; set; } = new();
     }
 }

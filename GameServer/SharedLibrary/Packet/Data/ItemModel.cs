@@ -3,13 +3,12 @@
 namespace SharedLibrary.Packet.Data
 {
     [MessagePackObject]
-    public class WalletInfo
+    public class ItemModel
     {
         [Key(0)]
-        public CurrencyType CurrencyType { get; set; }
+        public int ItemId { get; set; }
         
         [Key(1)]
-        public long Amount { get; set; }
+        public int Count { get; set; }
     }
 }
-

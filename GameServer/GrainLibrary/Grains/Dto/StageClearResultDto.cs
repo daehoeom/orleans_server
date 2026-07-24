@@ -7,9 +7,9 @@ public class StageClearResultDto
 {
     public ResultCode ResultCode { get; set; }
 
-    public StageInfo? StageInfo { get; set; }
+    public StageInfoModel? StageInfo { get; set; }
 
-    public List<WalletInfo> WalletInfo { get; set; } = new();
+    public List<WalletModel> WalletInfo { get; set; } = new();
 
     public int Level { get; set; }
 

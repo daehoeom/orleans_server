@@ -28,6 +28,7 @@
         // Attendance
         LoadAttendance = 6000,
         ReceiveAttendanceReward = 6001,
+        ReceiveAttendanceRewardAll = 6002,
 
         // Mail
         LoadMail = 7000,

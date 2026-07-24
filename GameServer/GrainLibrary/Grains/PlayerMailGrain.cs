@@ -9,7 +9,7 @@ namespace GrainLibrary.Grains;
 
 public interface IPlayerMailGrain : IGrainWithIntegerKey
 {
-    Task<List<MailInfo>> GetAllAsync();
+    Task<List<MailModel>> GetAllAsync();
     Task<MailReadResultDto> ReadAsync(long id);
     Task<ResultCode> DeleteAsync(long id);
     Task<ResultCode> DeleteAllAsync();
@@ -21,14 +21,14 @@ public class PlayerMailGrain(DatabaseService dbService) : Grain, IPlayerMailGrai
 
     private static readonly List<MailRewardEntry> EmptyRewards = new();
 
-    private readonly Dictionary<long, MailInfo> _mails = new();
+    private readonly Dictionary<long, MailModel> _mails = new();
 
     public override async Task OnActivateAsync(CancellationToken cancellationToken)
     {
         var rows = await dbService.Game.Mails.GetsAsync(PlayerId);
         foreach (var row in rows)
         {
-            _mails[row.id] = new MailInfo
+            _mails[row.id] = new MailModel
             {
                 Id = row.id,
                 MailId = row.mail_id,
@@ -44,7 +44,7 @@ public class PlayerMailGrain(DatabaseService dbService) : Grain, IPlayerMailGrai
         await base.OnActivateAsync(cancellationToken);
     }
 
-    public Task<List<MailInfo>> GetAllAsync()
+    public Task<List<MailModel>> GetAllAsync()
     {
         var now = TimeUtil.UtcNow;
         var result = _mails.Values.Where(mail => mail.ExpiredAt > now).ToList();
@@ -101,7 +101,7 @@ public class PlayerMailGrain(DatabaseService dbService) : Grain, IPlayerMailGrai
         return new MailReadResultDto
         {
             ResultCode = ResultCode.Success,
-            MailInfo = new MailInfo
+            MailInfo = new MailModel
             {
                 Id = mail.Id,
                 MailId = mail.MailId,

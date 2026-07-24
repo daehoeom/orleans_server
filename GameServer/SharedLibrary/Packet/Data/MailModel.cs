@@ -5,7 +5,7 @@ using MessagePack;
 namespace SharedLibrary.Packet.Data
 {
     [MessagePackObject]
-    public class MailInfo
+    public class MailModel
     {
         [Key(0)]
         public long Id { get; set; }

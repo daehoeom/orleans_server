@@ -25,7 +25,7 @@ public class StageController(IClusterClient clusterClient)
         await SendAsync(player, response: new EnterStageRes
         {
             StageId = req.StageId,
-            StaminaInfo = result.StaminaInfo!,
+            StaminaModel = result.StaminaInfo!,
         });
     }
 
@@ -44,7 +44,7 @@ public class StageController(IClusterClient clusterClient)
 
         await SendAsync(player, response: new ClearStageRes
         {
-            StageInfo = result.StageInfo!,
+            StageInfoModel = result.StageInfo!,
             WalletInfo = result.WalletInfo,
             Level = result.Level,
             Exp = result.Exp,

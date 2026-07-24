@@ -7,9 +7,9 @@ public class MailReadResultDto
 {
     public ResultCode ResultCode { get; set; }
 
-    public MailInfo? MailInfo { get; set; }
+    public MailModel? MailInfo { get; set; }
 
-    public List<WalletInfo> WalletInfo { get; set; } = new();
+    public List<WalletModel> WalletInfo { get; set; } = new();
 
     public RewardGrantResult RewardGrant { get; set; } = new();
 }

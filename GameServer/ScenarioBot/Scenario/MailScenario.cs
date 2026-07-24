@@ -36,11 +36,11 @@ public class MailScenario : IScenario
             throw new Exception($"[{Name}] ReadMail 실패: {readRes.ResultCode}");
         }
 
-        Console.WriteLine($"[{Name}] 읽음 처리: Id={readRes.Stream.MailInfo.Id}");
+        Console.WriteLine($"[{Name}] 읽음 처리: Id={readRes.Stream.MailModel.Id}");
 
         if (mail.Rewards.Count > 0)
         {
-            Console.WriteLine($"[{Name}] 보상 수령 완료 (읽음과 동시 처리): Id={readRes.Stream.MailInfo.Id}");
+            Console.WriteLine($"[{Name}] 보상 수령 완료 (읽음과 동시 처리): Id={readRes.Stream.MailModel.Id}");
         }
 
         await session.SendAsync(PacketHeaderType.DeleteMail, new DeleteMailReq { Id = mail.Id });

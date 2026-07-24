@@ -3,7 +3,7 @@
 namespace SharedLibrary.Packet.Data
 {
     [MessagePackObject]
-    public class StageInfo
+    public class StageInfoModel
     {
         [Key(0)]
         public int StageId { get; set; }

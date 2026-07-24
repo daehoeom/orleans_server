@@ -14,7 +14,7 @@ namespace SharedLibrary.Packet.Tcp.Shop
     [Response(PacketHeaderType.LoadShop)]
     public class ShopInfoRes
     {
-        [Key(0)] public List<ProductInfo> ProductInfo = new();
+        [Key(0)] public List<ShopProductModel> ProductInfo = new();
     }
 }
 

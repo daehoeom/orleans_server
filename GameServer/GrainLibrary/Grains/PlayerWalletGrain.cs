@@ -9,7 +9,7 @@ namespace GrainLibrary.Grains;
 public interface IPlayerWalletGrain : IGrainWithIntegerKey
 {
     Task<long> GetBalanceAsync(CurrencyType currencyType);
-    Task<List<WalletInfo>> GetAllBalanceAsync();
+    Task<List<WalletModel>> GetAllBalanceAsync();
     Task<ResultCode> SpendAsync(CurrencyType currencyType, long amount);
     Task<WalletAddResult> AddAsync(CurrencyType currencyType, long amount);
     Task<ResultCode> IsEnoughAsync(CurrencyType currencyType, long amount);
@@ -44,9 +44,9 @@ public class PlayerWalletGrain(DatabaseService dbService, ResourceService resour
         return Task.FromResult(_wallets.GetValueOrDefault(currencyType)?.Amount ?? 0);
     }
 
-    public Task<List<WalletInfo>> GetAllBalanceAsync()
+    public Task<List<WalletModel>> GetAllBalanceAsync()
     {
-        var result = _wallets.Select(p => new WalletInfo
+        var result = _wallets.Select(p => new WalletModel
         {
             CurrencyType = p.Value.CurrencyType,
             Amount = p.Value.Amount,

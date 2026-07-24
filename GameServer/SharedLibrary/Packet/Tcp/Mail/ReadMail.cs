@@ -17,9 +17,9 @@ namespace SharedLibrary.Packet.Tcp.Mail
     public class ReadMailRes
     {
         [Key(0)]
-        public MailInfo MailInfo { get; set; } = new();
+        public MailModel MailModel { get; set; } = new();
 
         [Key(1)]
-        public List<WalletInfo> WalletInfo { get; set; } = new();
+        public List<WalletModel> WalletInfo { get; set; } = new();
     }
 }

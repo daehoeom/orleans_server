@@ -3,13 +3,13 @@
 namespace SharedLibrary.Packet.Data
 {
     [MessagePackObject]
-    public class StaminaInfo
+    public class UnitModel
     {
         [Key(0)]
-        public int Amount { get; set; }
+        public int UnitId { get; set; }
         
         [Key(1)]
-        public int MaxAmount { get; set; }
-    }
+        public int Stack { get; set; }
+    }   
 }
 

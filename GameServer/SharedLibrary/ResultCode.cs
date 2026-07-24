@@ -58,8 +58,8 @@ namespace SharedLibrary
         
         NotEventActivate = -7000,
         AlreadyRewardReceived,
+        EventEnded,
         AttendanceEventNotFound,
-        AttendanceEventEnded,
         NotCheckedYet,
         AttendanceRewardNotFound,
         

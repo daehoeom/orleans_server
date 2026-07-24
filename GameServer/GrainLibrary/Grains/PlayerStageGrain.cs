@@ -12,7 +12,7 @@ public interface IPlayerStageGrain : IGrainWithIntegerKey
 {
     Task<StageStateDto?> GetAsync(int stageIndex);
     Task<IReadOnlyList<StageStateDto>> GetAllAsync();
-    Task<List<StageInfo>> GetAllInfoAsync();
+    Task<List<StageInfoModel>> GetAllInfoAsync();
     Task<StageEnterResultDto> EnterStageAsync(int stageIndex);
     Task<StageClearResultDto> ClearStageAsync(int stageIndex, bool missionStep1, bool missionStep2, bool missionStep3, short clearScore);
     Task<ResultCode> FailStageAsync(int stageIndex);
@@ -52,9 +52,9 @@ public class PlayerStageGrain(DatabaseService dbService, ResourceService resourc
         return Task.FromResult<IReadOnlyList<StageStateDto>>(_stages.Values.ToList());
     }
 
-    public Task<List<StageInfo>> GetAllInfoAsync()
+    public Task<List<StageInfoModel>> GetAllInfoAsync()
     {
-        var result = _stages.Select(p => new StageInfo
+        var result = _stages.Select(p => new StageInfoModel
         {
             StageId = p.Value.StageIndex,
             Mission1 = p.Value.MissionStep1,
@@ -167,7 +167,7 @@ public class PlayerStageGrain(DatabaseService dbService, ResourceService resourc
         return new StageClearResultDto
         {
             ResultCode = ResultCode.Success,
-            StageInfo = new StageInfo
+            StageInfo = new StageInfoModel
             {
                 StageId = stageIndex,
                 Mission1 = missionStep1,
